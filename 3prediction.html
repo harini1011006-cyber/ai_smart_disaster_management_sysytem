@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart AI Disaster Management</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        header {
+            background: #b30000;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        header p {
+            margin-top: 8px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 25px auto;
+        }
+
+        .location {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px #ccc;
+        }
+
+        .location h2 {
+            color: #b30000;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 10px #ccc;
+        }
+
+        .card h3 {
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #b30000;
+        }
+
+        .alert {
+            margin-top: 25px;
+            padding: 25px;
+            background: #ff0000;
+            color: white;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 20px #ff4444;
+            animation: blink 1s infinite;
+        }
+
+        .alert h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .alert p {
+            font-size: 18px;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.65;
+            }
+        }
+
+        .status {
+            margin-top: 25px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px #ccc;
+        }
+
+        .status h2 {
+            color: #b30000;
+            margin-bottom: 15px;
+        }
+
+        #time {
+            font-weight: bold;
+            color: #b30000;
+        }
+
+        footer {
+            margin-top: 30px;
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚨 Smart AI-Based Disaster Management</h1>
+    <p>Real-Time Disaster Monitoring & Emergency Response System</p>
+</header>
+
+<div class="container">
+
+    <div class="location">
+        <h2>📍 Current Location</h2>
+        <p>Cuddalore, Tamil Nadu</p>
+        <p>Live Time: <span id="time"></span></p>
+    </div>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h3>🌧 Rainfall</h3>
+            <div class="value" id="rainfall">85 mm</div>
+        </div>
+
+        <div class="card">
+            <h3>🌡 Temperature</h3>
+            <div class="value" id="temperature">29 °C</div>
+        </div>
+
+        <div class="card">
+            <h3>💨 Wind Speed</h3>
+            <div class="value" id="wind">65 km/h</div>
+        </div>
+
+        <div class="card">
+            <h3>💧 Water Level</h3>
+            <div class="value" id="water">82 %</div>
+        </div>
+
+        <div class="card">
+            <h3>🌍 Earthquake</h3>
+            <div class="value">Normal</div>
+        </div>
+
+        <div class="card">
+            <h3>🔥 Fire Risk</h3>
+            <div class="value">Low</div>
+        </div>
+
+    </div>
+
+    <!-- RED ALERT -->
+
+    <div class="alert">
+        <h2>🚨 RED ALERT</h2>
+        <p>HIGH DISASTER RISK DETECTED</p>
+        <p>Immediate emergency response is required.</p>
+    </div>
+
+    <div class="status">
+        <h2>🤖 AI Analysis</h2>
+
+        <p>
+            AI system is analyzing rainfall, wind speed,
+            water level and disaster-related data.
+        </p>
+
+        <br>
+
+        <p>
+            <b>Risk Detection:</b>
+            <span style="color:red;">
+                HIGH RISK
+            </span>
+        </p>
+
+        <br>
+
+        <p>
+            <b>Recommended Action:</b>
+            Evacuate people from high-risk areas and
+            activate emergency response teams.
+        </p>
+    </div>
+
+</div>
+
+<footer>
+    Smart AI Disaster Management System © 2026
+</footer>
+
+
+<script>
+
+    // REAL-TIME CLOCK
+
+    function updateTime() {
+
+        let now = new Date();
+
+        let time = now.toLocaleTimeString();
+
+        document.getElementById("time").innerText = time;
+    }
+
+    setInterval(updateTime, 1000);
+
+    updateTime();
+
+
+    // SIMULATED REAL-TIME SENSOR DATA
+
+    setInterval(function() {
+
+        let rainfall = Math.floor(Math.random() * 30) + 70;
+        let temperature = Math.floor(Math.random() * 5) + 27;
+        let wind = Math.floor(Math.random() * 20) + 55;
+        let water = Math.floor(Math.random() * 15) + 75;
+
+        document.getElementById("rainfall").innerText =
+            rainfall + " mm";
+
+        document.getElementById("temperature").innerText =
+            temperature + " °C";
+
+        document.getElementById("wind").innerText =
+            wind + " km/h";
+
+        document.getElementById("water").innerText =
+            water + " %";
+
+    }, 3000);
+
+</script>
+
+</body>
+</html>

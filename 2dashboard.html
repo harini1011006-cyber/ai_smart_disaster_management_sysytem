@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Smart Disaster Management</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f7f8fa;
+    color:#1f2937;
+}
+
+/* HEADER */
+.header{
+    height:82px;
+    background:white;
+    border-bottom:1px solid #eee;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 35px;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-icon{
+    width:48px;
+    height:48px;
+    background:#e51b23;
+    color:white;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+}
+
+.logo h1{
+    font-size:22px;
+    color:#d71920;
+}
+
+.logo p{
+    font-size:12px;
+    color:#64748b;
+    margin-top:4px;
+}
+
+.system-status{
+    background:#effdf5;
+    color:#15803d;
+    padding:12px 20px;
+    border-radius:25px;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.dot{
+    display:inline-block;
+    width:9px;
+    height:9px;
+    background:#22c55e;
+    border-radius:50%;
+    margin-right:7px;
+}
+
+/* LAYOUT */
+.layout{
+    display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:240px;
+    min-height:calc(100vh - 82px);
+    background:linear-gradient(180deg,#c90012,#e51b23);
+    padding:25px 15px;
+    color:white;
+}
+
+.menu{
+    padding:15px;
+    margin-bottom:8px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.2s;
+    font-size:14px;
+}
+
+.menu:hover,
+.menu.active{
+    background:rgba(255,255,255,0.20);
+}
+
+.menu span{
+    margin-right:10px;
+}
+
+/* MAIN */
+.main{
+    flex:1;
+    padding:25px;
+}
+
+/* WELCOME */
+.welcome{
+    background:linear-gradient(90deg,#fff1f2,#ffffff);
+    border:1px solid #ffd5d8;
+    border-radius:14px;
+    padding:25px;
+    margin-bottom:22px;
+}
+
+.welcome h2{
+    color:#b91c1c;
+    margin-bottom:8px;
+}
+
+.welcome p{
+    color:#64748b;
+}
+
+/* STATS */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:22px;
+}
+
+.stat{
+    background:white;
+    border-radius:13px;
+    padding:20px;
+    border-left:5px solid #e51b23;
+    box-shadow:0 3px 12px rgba(0,0,0,0.05);
+}
+
+.stat.orange{
+    border-left-color:#f59e0b;
+}
+
+.stat.blue{
+    border-left-color:#3b82f6;
+}
+
+.stat.green{
+    border-left-color:#16a34a;
+}
+
+.stat h4{
+    color:#475569;
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.stat strong{
+    font-size:28px;
+    color:#b91c1c;
+}
+
+.stat p{
+    font-size:12px;
+    color:#64748b;
+    margin-top:7px;
+}
+
+/* CONTENT GRID */
+.content-grid{
+    display:grid;
+    grid-template-columns:1.4fr 0.9fr 1fr;
+    gap:18px;
+}
+
+/* CARD */
+.card{
+    background:white;
+    border-radius:14px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.05);
+    overflow:hidden;
+}
+
+.card-header{
+    padding:15px 18px;
+    font-weight:bold;
+    border-bottom:1px solid #eee;
+}
+
+.red-header{
+    background:#e51b23;
+    color:white;
+}
+
+/* ALERTS */
+.alert{
+    padding:17px;
+    border-bottom:1px solid #eee;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.alert:hover{
+    background:#fff5f5;
+}
+
+.alert.selected{
+    background:#ffe4e6;
+    border-left:5px solid #e51b23;
+}
+
+.alert-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.alert-icon{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.alert-title{
+    font-weight:bold;
+    font-size:14px;
+}
+
+.alert-location{
+    font-size:12px;
+    color:#64748b;
+    margin-top:4px;
+}
+
+.badge{
+    padding:6px 12px;
+    border-radius:15px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.high{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.medium{
+    background:#fef3c7;
+    color:#d97706;
+}
+
+/* SOS */
+.sos-card{
+    text-align:center;
+    padding:25px;
+    background:linear-gradient(180deg,#fff5f5,#ffffff);
+}
+
+.sos-circle{
+    width:105px;
+    height:105px;
+    border-radius:50%;
+    background:#e51b23;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:10px auto 18px;
+    font-size:28px;
+    font-weight:bold;
+    box-shadow:0 0 0 12px #fee2e2;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.sos-circle:hover{
+    transform:scale(1.06);
+}
+
+.sos-card h2{
+    color:#b91c1c;
+    margin-bottom:8px;
+}
+
+.sos-card p{
+    color:#64748b;
+    font-size:13px;
+    margin-bottom:18px;
+}
+
+.sos-button{
+    border:none;
+    background:#e51b23;
+    color:white;
+    padding:14px 35px;
+    border-radius:30px;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.sos-button:hover{
+    background:#b91c1c;
+}
+
+/* UPDATES */
+.update{
+    padding:14px 18px;
+    border-bottom:1px solid #eee;
+}
+
+.update strong{
+    font-size:13px;
+}
+
+.update p{
+    font-size:12px;
+    color:#64748b;
+    margin-top:5px;
+}
+
+/* MAP */
+.map-card{
+    margin-top:18px;
+    background:white;
+    border-radius:14px;
+    padding:18px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.05);
+}
+
+.map{
+    height:260px;
+    margin-top:15px;
+    border-radius:12px;
+    background:
+        linear-gradient(120deg,#dff4e8,#eef5ff,#fff1f2);
+    position:relative;
+    overflow:hidden;
+    border:1px solid #ddd;
+}
+
+/* Fake map roads */
+.road{
+    position:absolute;
+    height:2px;
+    background:#ffffff;
+    transform:rotate(20deg);
+    width:110%;
+}
+
+.road1{top:50px;left:-20px;}
+.road2{top:120px;left:-20px;transform:rotate(-15deg);}
+.road3{top:190px;left:-20px;transform:rotate(10deg);}
+
+.marker{
+    position:absolute;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    border:3px solid white;
+}
+
+.red-marker{
+    background:#ef4444;
+}
+
+.green-marker{
+    background:#22c55e;
+}
+
+.blue-marker{
+    background:#3b82f6;
+}
+
+.m1{top:55px;left:30%;}
+.m2{top:140px;left:55%;}
+.m3{top:90px;left:75%;}
+.m4{top:200px;left:40%;}
+.m5{top:175px;left:80%;}
+
+/* MODULES */
+.modules{
+    margin-top:18px;
+}
+
+.module-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-top:15px;
+}
+
+.module{
+    padding:17px;
+    border:1px solid #eee;
+    border-radius:10px;
+    background:white;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.module:hover{
+    border-color:#e51b23;
+    transform:translateY(-2px);
+}
+
+.module-icon{
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+.module strong{
+    font-size:13px;
+}
+
+.module p{
+    color:#64748b;
+    font-size:11px;
+    margin-top:5px;
+}
+
+/* FOOTER */
+.footer{
+    text-align:center;
+    color:#94a3b8;
+    font-size:12px;
+    padding:25px;
+}
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+    .sidebar{
+        width:190px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .content-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+    .sidebar{
+        display:none;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .module-grid{
+        grid-template-columns:1fr;
+    }
+
+    .header{
+        padding:0 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+
+    <div class="logo">
+        <div class="logo-icon">🚨</div>
+
+        <div>
+            <h1>AI Smart Disaster Management</h1>
+            <p>Safer Communities | Smarter Response | A Better Tomorrow</p>
+        </div>
+    </div>
+
+    <div class="system-status">
+        <span class="dot"></span>
+        System Online
+    </div>
+
+</header>
+
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="menu active">
+        🏠 <span>Dashboard</span>
+    </div>
+
+    <div class="menu" onclick="openModule('Disaster Detection & Prediction')">
+        📡 <span>Disaster Detection</span>
+    </div>
+
+    <div class="menu" onclick="openModule('Emergency Alerts')">
+        🔔 <span>Emergency Alerts</span>
+    </div>
+
+    <div class="menu" onclick="openModule('SOS & Victim Management')">
+        🆘 <span>SOS & Victim Management</span>
+    </div>
+
+    <div class="menu" onclick="openModule('Rescue Team Management')">
+        👥 <span>Rescue Team Management</span>
+    </div>
+
+    <div class="menu" onclick="openModule('Live Tracking & Routes')">
+        📍 <span>Live Tracking & Routes</span>
+    </div>
+
+    <div class="menu" onclick="openModule('Relief & Shelter Management')">
+        🏠 <span>Relief & Shelter Management</span>
+    </div>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+    <!-- WELCOME -->
+
+    <section class="welcome">
+
+        <h2>🚨 Welcome to Emergency Dashboard</h2>
+
+        <p>
+            Monitor disaster conditions, emergency alerts,
+            SOS requests, rescue operations and relief services
+            in real-time.
+        </p>
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section class="stats">
+
+        <div class="stat">
+
+            <h4>⚠️ Current Risk Level</h4>
+
+            <strong>HIGH</strong>
+
+            <p>↑ 2% from last hour</p>
+
+        </div>
+
+
+        <div class="stat orange">
+
+            <h4>🔔 Active Alerts</h4>
+
+            <strong>03</strong>
+
+            <p>2 new alerts</p>
+
+        </div>
+
+
+        <div class="stat blue">
+
+            <h4>🆘 SOS Requests</h4>
+
+            <strong>07</strong>
+
+            <p>5 pending response</p>
+
+        </div>
+
+
+        <div class="stat green">
+
+            <h4>👥 Rescue Teams</h4>
+
+            <strong>12</strong>
+
+            <p>3 currently active</p>
+
+        </div>
+
+    </section>
+
+
+    <!-- MAIN CONTENT -->
+
+    <section class="content-grid">
+
+
+        <!-- EMERGENCY ALERTS -->
+
+        <div class="card">
+
+            <div class="card-header red-header">
+                🚨 Active Emergency Alerts
+            </div>
+
+
+            <div class="alert" onclick="selectAlert(this,'Heavy Rainfall Alert')">
+
+                <div class="alert-left">
+
+                    <div class="alert-icon">🌧️</div>
+
+                    <div>
+                        <div class="alert-title">
+                            Heavy Rainfall Alert
+                        </div>
+
+                        <div class="alert-location">
+                            Chennai, Tamil Nadu
+                        </div>
+                    </div>
+
+                </div>
+
+                <span class="badge high">HIGH</span>
+
+            </div>
+
+
+            <div class="alert" onclick="selectAlert(this,'Flood Warning')">
+
+                <div class="alert-left">
+
+                    <div class="alert-icon">🌊</div>
+
+                    <div>
+                        <div class="alert-title">
+                            Flood Warning
+                        </div>
+
+                        <div class="alert-location">
+                            Kanchipuram, Tamil Nadu
+                        </div>
+                    </div>
+
+                </div>
+
+                <span class="badge medium">MEDIUM</span>
+
+            </div>
+
+
+            <div class="alert" onclick="selectAlert(this,'Cyclone Alert')">
+
+                <div class="alert-left">
+
+                    <div class="alert-icon">🌀</div>
+
+                    <div>
+                        <div class="alert-title">
+                            Cyclone Alert
+                        </div>
+
+                        <div class="alert-location">
+                            Bay of Bengal
+                        </div>
+                    </div>
+
+                </div>
+
+                <span class="badge high">HIGH</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- SOS -->
+
+        <div class="card sos-card">
+
+            <div
+                class="sos-circle"
+                onclick="sendSOS()"
+            >
+                SOS
+            </div>
+
+            <h2>Emergency SOS</h2>
+
+            <p>
+                Need immediate emergency assistance?
+            </p>
+
+            <button
+                class="sos-button"
+                onclick="sendSOS()"
+            >
+                📞 SEND SOS
+            </button>
+
+            <p style="margin-top:15px;">
+                📍 Your location will be shared with rescue teams
+            </p>
+
+        </div>
+
+
+        <!-- RECENT UPDATES -->
+
+        <div class="card">
+
+            <div class="card-header">
+                🔔 Recent Emergency Updates
+            </div>
+
+
+            <div class="update">
+
+                <strong>10:18 AM • Chennai</strong>
+
+                <p>
+                    Heavy rainfall alert issued.
+                </p>
+
+            </div>
+
+
+            <div class="update">
+
+                <strong>09:45 AM • Kanchipuram</strong>
+
+                <p>
+                    Rescue team dispatched to affected area.
+                </p>
+
+            </div>
+
+
+            <div class="update">
+
+                <strong>09:30 AM • Vellore</strong>
+
+                <p>
+                    New SOS request received.
+                </p>
+
+            </div>
+
+
+            <div class="update">
+
+                <strong>08:50 AM • Trichy</strong>
+
+                <p>
+                    Relief shelter activated.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MAP -->
+
+    <section class="map-card">
+
+        <h3>📍 Live Disaster Map</h3>
+
+        <p style="color:#64748b;font-size:12px;margin-top:5px;">
+            Disaster areas, SOS locations and rescue teams
+        </p>
+
+
+        <div class="map">
+
+            <div class="road road1"></div>
+            <div class="road road2"></div>
+            <div class="road road3"></div>
+
+
+            <div class="marker red-marker m1"></div>
+            <div class="marker green-marker m2"></div>
+            <div class="marker red-marker m3"></div>
+            <div class="marker blue-marker m4"></div>
+            <div class="marker green-marker m5"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MODULES -->
+
+    <section class="modules">
+
+        <div class="card" style="padding:20px;">
+
+            <h3>🛠️ Disaster Management Services</h3>
+
+            <div class="module-grid">
+
+
+                <div
+                    class="module"
+                    onclick="openModule('Disaster Detection & Prediction')"
+                >
+
+                    <div class="module-icon">📡</div>
+
+                    <strong>
+                        Disaster Detection & Prediction
+                    </strong>
+
+                    <p>
+                        Detect and predict disaster risks.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="module"
+                    onclick="openModule('Emergency Alerts & Notification')"
+                >
+
+                    <div class="module-icon">🔔</div>
+
+                    <strong>
+                        Emergency Alerts
+                    </strong>
+
+                    <p>
+                        Monitor emergency notifications.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="module"
+                    onclick="openModule('SOS & Victim Management')"
+                >
+
+                    <div class="module-icon">🆘</div>
+
+                    <strong>
+                        SOS & Victim Management
+                    </strong>
+
+                    <p>
+                        Manage SOS requests and victims.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="module"
+                    onclick="openModule('Rescue Team Management')"
+                >
+
+                    <div class="module-icon">👥</div>
+
+                    <strong>
+                        Rescue Team Management
+                    </strong>
+
+                    <p>
+                        Manage rescue teams.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="module"
+                    onclick="openModule('AI Rescue Route & Live Tracking')"
+                >
+
+                    <div class="module-icon">📍</div>
+
+                    <strong>
+                        Live Tracking & Routes
+                    </strong>
+
+                    <p>
+                        Track rescue operations.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="module"
+                    onclick="openModule('Relief & Shelter Management')"
+                >
+
+                    <div class="module-icon">🏠</div>
+
+                    <strong>
+                        Relief & Shelter Management
+                    </strong>
+
+                    <p>
+                        Manage shelters and relief resources.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <div class="footer">
+
+        AI Smart Disaster Management System |
+        Real-Time Monitoring |
+        Emergency Response |
+        Save Lives
+
+    </div>
+
+</main>
+
+</div>
+
+
+<script>
+
+/* SOS BUTTON */
+
+function sendSOS(){
+
+    const confirmSOS =
+        confirm(
+            "🚨 EMERGENCY SOS\n\n" +
+            "Do you need immediate emergency assistance?"
+        );
+
+    if(confirmSOS){
+
+        alert(
+            "✅ SOS REQUEST SENT!\n\n" +
+            "Your emergency request has been recorded.\n" +
+            "Rescue team will be notified."
+        );
+
+    }
+
+}
+
+
+/* ALERT CLICK */
+
+function selectAlert(element, alertName){
+
+    document
+        .querySelectorAll(".alert")
+        .forEach(alert => {
+
+            alert.classList.remove("selected");
+
+        });
+
+    element.classList.add("selected");
+
+    alert(
+        "🚨 Selected Alert\n\n" +
+        alertName
+    );
+
+}
+
+
+/* MODULE CLICK */
+
+function openModule(moduleName){
+
+    alert(
+        "📌 Module Selected\n\n" +
+        moduleName +
+        "\n\nBackend connection will open this module."
+    );
+
+}
+
+</script>
+
+</body>
+</html>

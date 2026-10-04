@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relief & Shelter Management</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        /* HEADER */
+        .header {
+            background: #c40000;
+            color: white;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .emergency-btn {
+            background: white;
+            color: #c40000;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* ALERT */
+        .alert-banner {
+            background: #fff0f0;
+            border-left: 6px solid #c40000;
+            color: #a00000;
+            padding: 14px 25px;
+            margin: 20px 30px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 0 30px 40px;
+        }
+
+        .title-section {
+            margin-bottom: 20px;
+        }
+
+        .title-section h1 {
+            color: #b00000;
+            margin-bottom: 6px;
+        }
+
+        .title-section p {
+            color: #666;
+        }
+
+        /* STAT CARDS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 5px solid #c40000;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #c40000;
+        }
+
+        /* CONTROLS */
+        .controls {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 22px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .controls input,
+        .controls select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .controls input {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .controls input:focus,
+        .controls select:focus {
+            border-color: #c40000;
+        }
+
+        /* SHELTER GRID */
+        .section-title {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .shelter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .shelter-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+        }
+
+        .shelter-header {
+            background: #c40000;
+            color: white;
+            padding: 15px;
+        }
+
+        .shelter-header h3 {
+            margin-bottom: 5px;
+        }
+
+        .shelter-body {
+            padding: 18px;
+        }
+
+        .location {
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .capacity {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .progress {
+            width: 100%;
+            height: 9px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #c40000;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .available {
+            background: #e8f8ed;
+            color: #16803c;
+        }
+
+        .limited {
+            background: #fff4d6;
+            color: #9a6800;
+        }
+
+        .full {
+            background: #ffe3e3;
+            color: #b00000;
+        }
+
+        .resources {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+            margin: 12px 0;
+        }
+
+        .resource {
+            background: #f8f8f8;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .view-btn {
+            width: 100%;
+            background: #c40000;
+            color: white;
+            border: none;
+            padding: 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .view-btn:hover {
+            background: #990000;
+        }
+
+        /* RELIEF SECTION */
+        .relief-section {
+            margin-top: 30px;
+        }
+
+        .relief-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .relief-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+            text-align: center;
+        }
+
+        .relief-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .relief-card h3 {
+            color: #c40000;
+            margin-bottom: 7px;
+        }
+
+        .relief-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 18px;
+            top: 12px;
+            font-size: 25px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .modal-content h2 {
+            color: #c40000;
+            margin-bottom: 15px;
+        }
+
+        .detail {
+            padding: 9px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .request-btn {
+            width: 100%;
+            margin-top: 18px;
+            padding: 12px;
+            border: none;
+            background: #c40000;
+            color: white;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #b00000;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            margin-top: 35px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .shelter-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .relief-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .header {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 0 15px 30px;
+            }
+
+            .alert-banner {
+                margin: 15px;
+            }
+
+            .stats,
+            .shelter-grid,
+            .relief-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo">🚨 Smart AI Disaster Management</div>
+        <button class="emergency-btn" onclick="emergencyAlert()">
+            🚨 Emergency
+        </button>
+    </header>
+
+    <!-- ALERT -->
+    <div class="alert-banner">
+        ⚠️ EMERGENCY ALERT: Heavy rainfall reported in the affected area.
+        Please move to the nearest available emergency shelter.
+    </div>
+
+    <main class="container">
+
+        <!-- TITLE -->
+        <section class="title-section">
+            <h1>Relief & Shelter Management</h1>
+            <p>Find emergency shelters, check availability and access essential relief resources.</p>
+        </section>
+
+        <!-- STATISTICS -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <h3>Total Shelters</h3>
+                <div class="number" id="totalShelters">12</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Available Shelters</h3>
+                <div class="number" id="availableShelters">8</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Available Beds</h3>
+                <div class="number">1,245</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>Occupied Beds</h3>
+                <div class="number">735</div>
+            </div>
+
+        </section>
+
+        <!-- SEARCH -->
+        <section class="controls">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search shelter or location..."
+                onkeyup="searchShelter()"
+            >
+
+            <select id="statusFilter" onchange="filterShelter()">
+                <option value="all">All Shelters</option>
+                <option value="available">Available</option>
+                <option value="limited">Limited</option>
+                <option value="full">Full</option>
+            </select>
+
+        </section>
+
+        <!-- SHELTERS -->
+        <h2 class="section-title">🏠 Emergency Shelters</h2>
+
+        <section class="shelter-grid" id="shelterGrid">
+
+            <!-- SHELTER 1 -->
+            <div class="shelter-card" data-status="available">
+
+                <div class="shelter-header">
+                    <h3>Government Higher Secondary School</h3>
+                    <p>Coimbatore</p>
+                </div>
+
+                <div class="shelter-body">
+
+                    <div class="location">📍 Gandhipuram, Coimbatore</div>
+
+                    <span class="status available">AVAILABLE</span>
+
+                    <div class="capacity">
+                        <span>Capacity</span>
+                        <strong>350 / 500</strong>
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width:70%"></div>
+                    </div>
+
+                    <div class="resources">
+                        <div class="resource">💧 Water</div>
+                        <div class="resource">🍚 Food</div>
+                        <div class="resource">🩺 Medical</div>
+                        <div class="resource">⚡ Power</div>
+                    </div>
+
+                    <button class="view-btn"
+                        onclick="showDetails(
+                        'Government Higher Secondary School',
+                        'Gandhipuram, Coimbatore',
+                        '150 beds available',
+                        'Food, Water, Medical, Power',
+                        'Available'
+                        )">
+                        View Details
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- SHELTER 2 -->
+            <div class="shelter-card" data-status="available">
+
+                <div class="shelter-header">
+                    <h3>Community Relief Centre</h3>
+                    <p>Coimbatore</p>
+                </div>
+
+                <div class="shelter-body">
+
+                    <div class="location">📍 RS Puram, Coimbatore</div>
+
+                    <span class="status available">AVAILABLE</span>
+
+                    <div class="capacity">
+                        <span>Capacity</span>
+                        <strong>220 / 400</strong>
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width:55%"></div>
+                    </div>
+
+                    <div class="resources">
+                        <div class="resource">💧 Water</div>
+                        <div class="resource">🍚 Food</div>
+                        <div class="resource">🩺 Medical</div>
+                        <div class="resource">📡 Internet</div>
+                    </div>
+
+                    <button class="view-btn"
+                        onclick="showDetails(
+                        'Community Relief Centre',
+                        'RS Puram, Coimbatore',
+                        '180 beds available',
+                        'Food, Water, Medical, Internet',
+                        'Available'
+                        )">
+                        View Details
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- SHELTER 3 -->
+            <div class="shelter-card" data-status="limited">
+
+                <div class="shelter-header">
+                    <h3>Emergency Sports Complex</h3>
+                    <p>Coimbatore</p>
+                </div>
+
+                <div class="shelter-body">
+
+                    <div class="location">📍 Saibaba Colony</div>
+
+                    <span class="status limited">LIMITED SPACE</span>
+
+                    <div class="capacity">
+                        <span>Capacity</span>
+                        <strong>450 / 500</strong>
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width:90%"></div>
+                    </div>
+
+                    <div class="resources">
+                        <div class="resource">💧 Water</div>
+                        <div class="resource">🍚 Food</div>
+                        <div class="resource">🩺 Medical</div>
+                        <div class="resource">⚡ Power</div>
+                    </div>
+
+                    <button class="view-btn"
+                        onclick="showDetails(
+                        'Emergency Sports Complex',
+                        'Saibaba Colony',
+                        '50 beds available',
+                        'Food, Water, Medical, Power',
+                        'Limited'
+                        )">
+                        View Details
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- SHELTER 4 -->
+            <div class="shelter-card" data-status="full">
+
+                <div class="shelter-header">
+                    <h3>Municipal Relief Hall</h3>
+                    <p>Coimbatore</p>
+                </div>
+
+                <div class="shelter-body">
+
+                    <div class="location">📍 Ukkadam</div>
+
+                    <span class="status full">FULL</span>
+
+                    <div class="capacity">
+                        <span>Capacity</span>
+                        <strong>300 / 300</strong>
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width:100%"></div>
+                    </div>
+
+                    <div class="resources">
+                        <div class="resource">💧 Water</div>
+                        <div class="resource">🍚 Food</div>
+                        <div class="resource">🩺 Medical</div>
+                        <div class="resource">⚡ Power</div>
+                    </div>
+
+                    <button class="view-btn"
+                        onclick="showDetails(
+                        'Municipal Relief Hall',
+                        'Ukkadam',
+                        'No beds available',
+                        'Food, Water, Medical, Power',
+                        'Full'
+                        )">
+                        View Details
+                    </button>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- RELIEF RESOURCES -->
+        <section class="relief-section">
+
+            <h2 class="section-title">📦 Relief Resources</h2>
+
+            <div class="relief-grid">
+
+                <div class="relief-card">
+                    <div class="relief-icon">🍚</div>
+                    <h3>Food</h3>
+                    <p>Daily food packets available for affected people.</p>
+                </div>
+
+                <div class="relief-card">
+                    <div class="relief-icon">💧</div>
+                    <h3>Drinking Water</h3>
+                    <p>Safe drinking water available at shelters.</p>
+                </div>
+
+                <div class="relief-card">
+                    <div class="relief-icon">🩺</div>
+                    <h3>Medical Support</h3>
+                    <p>First aid and emergency medical assistance.</p>
+                </div>
+
+                <div class="relief-card">
+                    <div class="relief-icon">🧺</div>
+                    <h3>Relief Kits</h3>
+                    <p>Essential clothing, blankets and hygiene kits.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- MODAL -->
+    <div class="modal" id="detailsModal">
+
+        <div class="modal-content">
+
+            <span class="close" onclick="closeModal()">×</span>
+
+            <h2 id="modalTitle">Shelter Details</h2>
+
+            <div class="detail">
+                <strong>📍 Location:</strong>
+                <span id="modalLocation"></span>
+            </div>
+
+            <div class="detail">
+                <strong>🛏 Availability:</strong>
+                <span id="modalBeds"></span>
+            </div>
+
+            <div class="detail">
+                <strong>📦 Resources:</strong>
+                <span id="modalResources"></span>
+            </div>
+
+            <div class="detail">
+                <strong>🚨 Status:</strong>
+                <span id="modalStatus"></span>
+            </div>
+
+            <button class="request-btn" onclick="requestShelter()">
+                🏠 Request Shelter
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        Smart AI Disaster & Relief Emergency Management System
+        <br>
+        Emergency Support • Shelter Management • Relief Services
+    </footer>
+
+
+    <script>
+
+        /* EMERGENCY BUTTON */
+        function emergencyAlert() {
+            alert(
+                "🚨 EMERGENCY ALERT\n\n" +
+                "Please move to the nearest available shelter.\n" +
+                "Contact the emergency rescue team if immediate assistance is required."
+            );
+        }
+
+
+        /* SHELTER DETAILS */
+        function showDetails(name, location, beds, resources, status) {
+
+            document.getElementById("modalTitle").innerText = name;
+            document.getElementById("modalLocation").innerText = location;
+            document.getElementById("modalBeds").innerText = beds;
+            document.getElementById("modalResources").innerText = resources;
+            document.getElementById("modalStatus").innerText = status;
+
+            document.getElementById("detailsModal").style.display = "flex";
+        }
+
+
+        /* CLOSE MODAL */
+        function closeModal() {
+            document.getElementById("detailsModal").style.display = "none";
+        }
+
+
+        /* REQUEST SHELTER */
+        function requestShelter() {
+
+            alert(
+                "🏠 Shelter Request Submitted Successfully!\n\n" +
+                "Relief team has received your request.\n" +
+                "Please wait for further emergency instructions."
+            );
+
+            closeModal();
+        }
+
+
+        /* SEARCH */
+        function searchShelter() {
+
+            let input =
+                document.getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+            let cards =
+                document.querySelectorAll(".shelter-card");
+
+            cards.forEach(function(card) {
+
+                let text =
+                    card.innerText.toLowerCase();
+
+                if (text.includes(input)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+
+            });
+        }
+
+
+        /* FILTER */
+        function filterShelter() {
+
+            let filter =
+                document.getElementById("statusFilter").value;
+
+            let cards =
+                document.querySelectorAll(".shelter-card");
+
+            cards.forEach(function(card) {
+
+                let status =
+                    card.getAttribute("data-status");
+
+                if (filter === "all" || status === filter) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+
+            });
+        }
+
+
+        /* CLOSE MODAL WHEN CLICKING OUTSIDE */
+        window.onclick = function(event) {
+
+            let modal =
+                document.getElementById("detailsModal");
+
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+
+        };
+
+    </script>
+
+</body>
+</html>

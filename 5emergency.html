@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Smart Disaster Management - Dashboard</title>
+
+<style>
+
+/* =========================
+   BASIC
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f5f7fa;
+    color: #172033;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 270px;
+    height: 100vh;
+    background: linear-gradient(180deg, #8b0000, #c40000, #700000);
+    color: white;
+    padding: 25px 18px;
+    overflow-y: auto;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    width: 55px;
+    height: 55px;
+    background: white;
+    color: #c40000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin: auto;
+}
+
+.logo h2 {
+    margin-top: 12px;
+    font-size: 20px;
+}
+
+.logo p {
+    font-size: 11px;
+    margin-top: 8px;
+    opacity: 0.9;
+}
+
+.menu {
+    list-style: none;
+}
+
+.menu li {
+    margin: 8px 0;
+}
+
+.menu a {
+    text-decoration: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+.menu a:hover,
+.menu a.active {
+    background: rgba(255,255,255,0.20);
+}
+
+.menu-icon {
+    font-size: 20px;
+    width: 25px;
+}
+
+/* Sidebar bottom */
+
+.sidebar-bottom {
+    margin-top: 100px;
+    text-align: center;
+}
+
+.sidebar-bottom p {
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main {
+    margin-left: 270px;
+    min-height: 100vh;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar {
+    height: 70px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.search {
+    width: 480px;
+    background: #f4f6f8;
+    border-radius: 25px;
+    padding: 12px 20px;
+    color: #777;
+}
+
+.search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 90%;
+    font-size: 14px;
+}
+
+.top-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.notification {
+    font-size: 23px;
+    position: relative;
+    cursor: pointer;
+}
+
+.notification span {
+    position: absolute;
+    top: -7px;
+    right: -8px;
+    background: red;
+    color: white;
+    font-size: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #8b0000;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+    padding: 25px 30px;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    background:
+        linear-gradient(90deg, rgba(100,0,0,0.92), rgba(180,0,0,0.55)),
+        url("https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=1200&q=80");
+
+    background-size: cover;
+    background-position: center;
+
+    min-height: 200px;
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 30px;
+    color: white;
+
+    margin-bottom: 22px;
+}
+
+.hero-text small {
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.hero-text h1 {
+    font-size: 30px;
+    margin: 12px 0;
+}
+
+.hero-text p {
+    margin-bottom: 20px;
+}
+
+.hero-btn {
+    background: white;
+    color: #b00000;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.weather {
+    background: rgba(120,0,0,0.6);
+    padding: 25px;
+    border-radius: 12px;
+    min-width: 190px;
+}
+
+.weather h2 {
+    font-size: 28px;
+    margin: 8px 0;
+}
+
+.high-risk {
+    margin-top: 15px;
+    color: white;
+}
+
+.high-risk::before {
+    content: "●";
+    color: #ff2222;
+    margin-right: 8px;
+}
+
+/* =========================
+   STAT CARDS
+========================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.stat-card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+}
+
+.stat-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #ffe8e8;
+    color: #c00000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.stat-card h3 {
+    font-size: 14px;
+}
+
+.stat-number {
+    color: #c00000;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 20px 0 5px;
+}
+
+.stat-footer {
+    color: #777;
+    font-size: 12px;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.9fr;
+    gap: 18px;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #eee;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+    margin-bottom: 18px;
+}
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.card-title h3 {
+    font-size: 16px;
+}
+
+.view {
+    color: #c00000;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* =========================
+   ALERTS
+========================= */
+
+.alert-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.alert-icon {
+    width: 40px;
+    height: 40px;
+    background: #ffe7e7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c00000;
+}
+
+.alert-info {
+    flex: 1;
+}
+
+.alert-info strong {
+    display: block;
+    font-size: 14px;
+}
+
+.alert-info small {
+    color: #777;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.badge.high {
+    background: #ffdede;
+    color: #c00000;
+}
+
+.badge.medium {
+    background: #fff0cf;
+    color: #b36b00;
+}
+
+.badge.low {
+    background: #dff7e6;
+    color: #16833b;
+}
+
+/* =========================
+   CHART
+========================= */
+
+.chart {
+    height: 250px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding: 20px 5px 30px;
+    border-bottom: 1px solid #ddd;
+}
+
+.chart-column {
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+}
+
+.bar {
+    width: 8px;
+    border-radius: 5px 5px 0 0;
+}
+
+.bar.red {
+    background: #c00000;
+}
+
+.bar.orange {
+    background: #f39c12;
+}
+
+.bar.green {
+    background: #20a464;
+}
+
+.bar.blue {
+    background: #2f80ed;
+}
+
+.chart-day {
+    text-align: center;
+    font-size: 11px;
+    color: #777;
+}
+
+/* =========================
+   MAP
+========================= */
+
+.map-box {
+    height: 250px;
+    border-radius: 10px;
+    background:
+        linear-gradient(rgba(220,240,220,0.7),rgba(220,240,220,0.7)),
+        url("https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Tamil_Nadu_districts_map.svg/640px-Tamil_Nadu_districts_map.svg.png");
+
+    background-size: cover;
+    background-position: center;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.map-pin {
+    position: absolute;
+    font-size: 25px;
+}
+
+.pin1 {
+    top: 45px;
+    right: 100px;
+}
+
+.pin2 {
+    top: 130px;
+    left: 110px;
+}
+
+.pin3 {
+    bottom: 40px;
+    left: 170px;
+}
+
+/* =========================
+   QUICK ACTIONS
+========================= */
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.quick-btn {
+    background: #fff7f7;
+    border: 1px solid #f3dada;
+    padding: 18px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.quick-btn:hover {
+    background: #ffe3e3;
+    transform: translateY(-2px);
+}
+
+.quick-btn .q-icon {
+    width: 42px;
+    height: 42px;
+    margin: auto;
+    background: #ffe2e2;
+    color: #c00000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.quick-btn p {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* =========================
+   SOS TABLE
+========================= */
+
+.sos-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    padding: 13px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+}
+
+.status-progress {
+    background: #fff0c9;
+    color: #9b6500;
+    padding: 5px 8px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.status-assigned {
+    background: #e2f0ff;
+    color: #2671b8;
+    padding: 5px 8px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* =========================
+   RESOURCES
+========================= */
+
+.resources {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 10px;
+}
+
+.resource {
+    text-align: center;
+    padding: 15px 5px;
+    border: 1px solid #eee;
+    border-radius: 9px;
+}
+
+.resource-icon {
+    font-size: 22px;
+    color: #c00000;
+}
+
+.resource strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 18px;
+}
+
+.resource small {
+    color: #777;
+}
+
+/* =========================
+   SAFETY
+========================= */
+
+.safety-item {
+    padding: 9px 0;
+    font-size: 13px;
+}
+
+.safety-item::before {
+    content: "✓";
+    background: #c00000;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 11px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-size: 12px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1100px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .main {
+        margin-left: 220px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width:800px) {
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .topbar {
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .search {
+        width: 100%;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            🛡️
+        </div>
+
+        <h2>Disaster Relief<br>Management</h2>
+
+        <p>Stay Alert • Stay Safe • Save Lives</p>
+
+    </div>
+
+
+    <ul class="menu">
+
+        <li>
+            <a href="#" class="active">
+                <span class="menu-icon">🏠</span>
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="menu-icon">🔔</span>
+                Emergency Alerts
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="menu-icon">🆘</span>
+                SOS Request
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="menu-icon">👥</span>
+                Rescue Teams
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="menu-icon">📦</span>
+                Resources
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="menu-icon">🏠</span>
+                Shelters
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="menu-icon">📍</span>
+                Map & Location
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="menu-icon">✉️</span>
+                Notifications
+            </a>
+        </li>
+
+        <li>
+            <a href="#">
+                <span class="menu-icon">👤</span>
+                Profile
+            </a>
+        </li>
+
+    </ul>
+
+
+    <div class="sidebar-bottom">
+
+        <p>
+            Together<br>
+            We Can Difference<br>
+            Make a Safer World
+        </p>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="main">
+
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div class="search">
+
+            🔍
+            <input
+                type="text"
+                placeholder="Search for alerts, locations or resources..."
+            >
+
+        </div>
+
+
+        <div class="top-right">
+
+            <div class="notification">
+
+                🔔
+
+                <span>3</span>
+
+            </div>
+
+
+            <div class="profile">
+
+                <div class="profile-img">
+                    👤
+                </div>
+
+                <strong>Emergency User</strong>
+
+                <span>⌄</span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- CONTENT -->
+
+    <section class="content">
+
+
+        <!-- HERO -->
+
+        <div class="hero">
+
+            <div class="hero-text">
+
+                <small>EMERGENCY MANAGEMENT SYSTEM</small>
+
+                <h1>Be Prepared, Stay Safe</h1>
+
+                <p>
+                    Real-time alerts, faster response, safer communities.
+                </p>
+
+                <button
+                    class="hero-btn"
+                    onclick="viewAlerts()"
+                >
+                    View Latest Alerts →
+                </button>
+
+            </div>
+
+
+            <div class="weather">
+
+                <div>🌧️ Chennai 📍</div>
+
+                <h2>28°C</h2>
+
+                <p>Heavy Rain</p>
+
+                <div class="high-risk">
+                    High Risk
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- STAT CARDS -->
+
+        <div class="stats">
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        ⚠️
+                    </div>
+
+                    <h3>Active Alerts</h3>
+
+                </div>
+
+                <div class="stat-number">
+                    3
+                </div>
+
+                <div class="stat-footer">
+                    ↑ 2 new this week
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        🆘
+                    </div>
+
+                    <h3>SOS Requests</h3>
+
+                </div>
+
+                <div class="stat-number">
+                    2
+                </div>
+
+                <div class="stat-footer">
+                    ↑ 1 new this week
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        👥
+                    </div>
+
+                    <h3>Rescue Teams</h3>
+
+                </div>
+
+                <div class="stat-number">
+                    12
+                </div>
+
+                <div class="stat-footer">
+                    ↑ 2 on duty
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        🚑
+                    </div>
+
+                    <h3>Ambulances</h3>
+
+                </div>
+
+                <div class="stat-number">
+                    5
+                </div>
+
+                <div class="stat-footer">
+                    ↑ 1 available
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- MAIN GRID -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- COLUMN 1 -->
+
+            <div>
+
+
+                <!-- DISASTER GRAPH -->
+
+                <div class="card">
+
+                    <div class="card-title">
+
+                        <h3>
+                            📊 Disaster Overview
+                        </h3>
+
+                        <span class="view">
+                            Last 7 days ▾
+                        </span>
+
+                    </div>
+
+
+                    <div class="chart">
+
+
+                        <div>
+
+                            <div class="chart-column">
+
+                                <div
+                                    class="bar red"
+                                    style="height:75%"
+                                ></div>
+
+                                <div
+                                    class="bar orange"
+                                    style="height:50%"
+                                ></div>
+
+                                <div
+                                    class="bar green"
+                                    style="height:60%"
+                                ></div>
+
+                                <div
+                                    class="bar blue"
+                                    style="height:40%"
+                                ></div>
+
+                            </div>
+
+                            <div class="chart-day">Mon</div>
+
+                        </div>
+
+
+
+                        <div>
+
+                            <div class="chart-column">
+
+                                <div
+                                    class="bar red"
+                                    style="height:72%"
+                                ></div>
+
+                                <div
+                                    class="bar orange"
+                                    style="height:55%"
+                                ></div>
+
+                                <div
+                                    class="bar green"
+                                    style="height:65%"
+                                ></div>
+
+                                <div
+                                    class="bar blue"
+                                    style="height:42%"
+                                ></div>
+
+                            </div>
+
+                            <div class="chart-day">Tue</div>
+
+                        </div>
+
+
+
+                        <div>
+
+                            <div class="chart-column">
+
+                                <div
+                                    class="bar red"
+                                    style="height:67%"
+                                ></div>
+
+                                <div
+                                    class="bar orange"
+                                    style="height:52%"
+                                ></div>
+
+                                <div
+                                    class="bar green"
+                                    style="height:58%"
+                                ></div>
+
+                                <div
+                                    class="bar blue"
+                                    style="height:38%"
+                                ></div>
+
+                            </div>
+
+                            <div class="chart-day">Wed</div>
+
+                        </div>
+
+
+
+                        <div>
+
+                            <div class="chart-column">
+
+                                <div
+                                    class="bar red"
+                                    style="height:63%"
+                                ></div>
+
+                                <div
+                                    class="bar orange"
+                                    style="height:47%"
+                                ></div>
+
+                                <div
+                                    class="bar green"
+                                    style="height:55%"
+                                ></div>
+
+                                <div
+                                    class="bar blue"
+                                    style="height:35%"
+                                ></div>
+
+                            </div>
+
+                            <div class="chart-day">Thu</div>
+
+                        </div>
+
+
+
+                        <div>
+
+                            <div class="chart-column">
+
+                                <div
+                                    class="bar red"
+                                    style="height:60%"
+                                ></div>
+
+                                <div
+                                    class="bar orange"
+                                    style="height:45%"
+                                ></div>
+
+                                <div
+                                    class="bar green"
+                                    style="height:52%"
+                                ></div>
+
+                                <div
+                                    class="bar blue"
+                                    style="height:33%"
+                                ></div>
+
+                            </div>
+
+                            <div class="chart-day">Fri</div>
+
+                        </div>
+
+
+
+                        <div>
+
+                            <div class="chart-column">
+
+                                <div
+                                    class="bar red"
+                                    style="height:65%"
+                                ></div>
+
+                                <div
+                                    class="bar orange"
+                                    style="height:48%"
+                                ></div>
+
+                                <div
+                                    class="bar green"
+                                    style="height:57%"
+                                ></div>
+
+                                <div
+                                    class="bar blue"
+                                    style="height:36%"
+                                ></div>
+
+                            </div>
+
+                            <div class="chart-day">Sat</div>
+
+                        </div>
+
+
+
+                        <div>
+
+                            <div class="chart-column">
+
+                                <div
+                                    class="bar red"
+                                    style="height:80%"
+                                ></div>
+
+                                <div
+                                    class="bar orange"
+                                    style="height:60%"
+                                ></div>
+
+                                <div
+                                    class="bar green"
+                                    style="height:68%"
+                                ></div>
+
+                                <div
+                                    class="bar blue"
+                                    style="height:43%"
+                                ></div>
+
+                            </div>
+
+                            <div class="chart-day">Sun</div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SOS REQUEST -->
+
+                <div class="card">
+
+                    <div class="card-title">
+
+                        <h3>👥 Recent SOS Requests</h3>
+
+                        <span class="view">
+                            View All →
+                        </span>
+
+                    </div>
+
+
+                    <div class="sos-row">
+
+                        <strong>User</strong>
+                        <strong>Location</strong>
+                        <strong>Type</strong>
+                        <strong>Status</strong>
+
+                    </div>
+
+
+                    <div class="sos-row">
+
+                        <span>👤 User 01</span>
+                        <span>Chennai</span>
+                        <span>Medical Help</span>
+
+                        <span class="status-progress">
+                            In Progress
+                        </span>
+
+                    </div>
+
+
+                    <div class="sos-row">
+
+                        <span>👤 User 02</span>
+                        <span>Nagapattinam</span>
+                        <span>Rescue</span>
+
+                        <span class="status-assigned">
+                            Assigned
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- COLUMN 2 -->
+
+            <div>
+
+
+                <!-- MAP -->
+
+                <div class="card">
+
+                    <div class="card-title">
+
+                        <h3>📍 Disaster Map</h3>
+
+                        <span class="view">
+                            Map
+                        </span>
+
+                    </div>
+
+
+                    <div class="map-box">
+
+                        <div class="map-pin pin1">
+                            📍
+                        </div>
+
+                        <div class="map-pin pin2">
+                            📍
+                        </div>
+
+                        <div class="map-pin pin3">
+                            📍
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RESOURCES -->
+
+                <div class="card">
+
+                    <div class="card-title">
+
+                        <h3>📦 Resources Availability</h3>
+
+                        <span class="view">
+                            View All →
+                        </span>
+
+                    </div>
+
+
+                    <div class="resources">
+
+
+                        <div class="resource">
+
+                            <div class="resource-icon">
+                                🚑
+                            </div>
+
+                            <strong>5</strong>
+
+                            <small>Ambulances</small>
+
+                        </div>
+
+
+                        <div class="resource">
+
+                            <div class="resource-icon">
+                                👥
+                            </div>
+
+                            <strong>12</strong>
+
+                            <small>Rescue Teams</small>
+
+                        </div>
+
+
+                        <div class="resource">
+
+                            <div class="resource-icon">
+                                🍱
+                            </div>
+
+                            <strong>1200</strong>
+
+                            <small>Food</small>
+
+                        </div>
+
+
+                        <div class="resource">
+
+                            <div class="resource-icon">
+                                💧
+                            </div>
+
+                            <strong>2500</strong>
+
+                            <small>Water</small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- COLUMN 3 -->
+
+            <div>
+
+
+                <!-- LATEST ALERTS -->
+
+                <div class="card">
+
+                    <div class="card-title">
+
+                        <h3>🔔 Latest Emergency Alerts</h3>
+
+                        <span class="view">
+                            View All →
+                        </span>
+
+                    </div>
+
+
+                    <div class="alert-item">
+
+                        <div class="alert-icon">
+                            🌊
+                        </div>
+
+                        <div class="alert-info">
+
+                            <strong>Flood Warning</strong>
+
+                            <small>
+                                Chennai, Tamil Nadu
+                            </small>
+
+                        </div>
+
+                        <span class="badge high">
+                            High
+                        </span>
+
+                    </div>
+
+
+                    <div class="alert-item">
+
+                        <div class="alert-icon">
+                            🌀
+                        </div>
+
+                        <div class="alert-info">
+
+                            <strong>Cyclone Alert</strong>
+
+                            <small>
+                                Nagapattinam
+                            </small>
+
+                        </div>
+
+                        <span class="badge high">
+                            High
+                        </span>
+
+                    </div>
+
+
+                    <div class="alert-item">
+
+                        <div class="alert-icon">
+                            ⛰️
+                        </div>
+
+                        <div class="alert-info">
+
+                            <strong>Landslide Risk</strong>
+
+                            <small>
+                                Coimbatore
+                            </small>
+
+                        </div>
+
+                        <span class="badge medium">
+                            Medium
+                        </span>
+
+                    </div>
+
+
+                    <div class="alert-item">
+
+                        <div class="alert-icon">
+                            🌧️
+                        </div>
+
+                        <div class="alert-info">
+
+                            <strong>Heavy Rainfall</strong>
+
+                            <small>
+                                Madurai
+                            </small>
+
+                        </div>
+
+                        <span class="badge low">
+                            Low
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- QUICK ACTIONS -->
+
+                <div class="card">
+
+                    <div class="card-title">
+
+                        <h3>⚡ Quick Actions</h3>
+
+                    </div>
+
+
+                    <div class="quick-actions">
+
+
+                        <button
+                            class="quick-btn"
+                            onclick="sendSOS()"
+                        >
+
+                            <div class="q-icon">
+                                🆘
+                            </div>
+
+                            <p>Raise SOS</p>
+
+                        </button>
+
+
+                        <button
+                            class="quick-btn"
+                            onclick="reportEmergency()"
+                        >
+
+                            <div class="q-icon">
+                                ⚠️
+                            </div>
+
+                            <p>Report Emergency</p>
+
+                        </button>
+
+
+                        <button
+                            class="quick-btn"
+                            onclick="findShelter()"
+                        >
+
+                            <div class="q-icon">
+                                🏠
+                            </div>
+
+                            <p>Find Shelter</p>
+
+                        </button>
+
+
+                        <button
+                            class="quick-btn"
+                            onclick="viewMap()"
+                        >
+
+                            <div class="q-icon">
+                                📍
+                            </div>
+
+                            <p>View Map</p>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SAFETY TIPS -->
+
+                <div class="card">
+
+                    <div class="card-title">
+
+                        <h3>🛡️ Safety Tips</h3>
+
+                    </div>
+
+
+                    <div class="safety-item">
+                        Avoid flooded areas
+                    </div>
+
+                    <div class="safety-item">
+                        Keep emergency kit ready
+                    </div>
+
+                    <div class="safety-item">
+                        Follow official updates
+                    </div>
+
+                    <div class="safety-item">
+                        Stay connected with family
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <footer>
+
+        © 2026 AI Smart Disaster Management System
+        | Prepared Today • Safer Tomorrow ❤️
+
+    </footer>
+
+</main>
+
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+function sendSOS() {
+
+    let confirmSOS = confirm(
+        "🚨 EMERGENCY SOS\n\n" +
+        "Do you need immediate emergency assistance?"
+    );
+
+    if (confirmSOS) {
+
+        alert(
+            "✅ SOS REQUEST SENT!\n\n" +
+            "Your emergency request has been recorded.\n" +
+            "Rescue team will be notified."
+        );
+
+    }
+
+}
+
+
+function reportEmergency() {
+
+    alert(
+        "⚠️ REPORT EMERGENCY\n\n" +
+        "Emergency reporting module will open here."
+    );
+
+}
+
+
+function findShelter() {
+
+    alert(
+        "🏠 FIND SHELTER\n\n" +
+        "Nearby emergency shelters will be displayed here."
+    );
+
+}
+
+
+function viewMap() {
+
+    alert(
+        "📍 DISASTER MAP\n\n" +
+        "Live disaster map will open here."
+    );
+
+}
+
+
+function viewAlerts() {
+
+    alert(
+        "🔔 LATEST EMERGENCY ALERTS\n\n" +
+        "Flood Warning\n" +
+        "Cyclone Alert\n" +
+        "Landslide Risk\n" +
+        "Heavy Rainfall"
+    );
+
+}
+
+</script>
+
+</body>
+</html>

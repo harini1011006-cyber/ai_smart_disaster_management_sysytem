@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)file:///C:/Users/User/Desktop/disaster%20monitoring.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart AI Disaster Monitoring</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f4f6f9;color:#222}
+.header{background:white;padding:18px 25px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd}
+.logo{font-size:23px;font-weight:bold}
+.logo span{color:#e50914}
+.live{color:#e50914;font-weight:bold}
+.container{display:flex;min-height:calc(100vh - 70px)}
+.sidebar{width:220px;background:white;padding:20px 12px;border-right:1px solid #ddd}
+.menu{padding:15px;margin-bottom:8px;border-radius:9px;cursor:pointer;font-weight:bold}
+.menu:hover,.menu.active{background:#e50914;color:white}
+.main{flex:1;padding:25px;min-width:0}
+.page{display:none}
+.page.active{display:block}
+h2{margin-bottom:20px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.card{background:white;padding:22px;border-radius:12px;border:1px solid #ddd}
+.card p{color:#e50914;font-weight:bold}
+.number{font-size:32px;font-weight:bold;margin-top:12px}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:20px}
+.box{background:white;border:1px solid #ddd;border-radius:12px;overflow:hidden}
+.box-title{padding:16px;font-size:18px;font-weight:bold;border-bottom:1px solid #ddd}
+.map{height:350px;position:relative;background:linear-gradient(135deg,#d9f1ff,#f0fff1);overflow:hidden}
+.map:before{content:"INDIA";position:absolute;top:40%;left:35%;font-size:45px;color:#a8c6b1;font-weight:bold;opacity:.6}
+.marker{position:absolute;border:0;background:#e50914;color:white;border-radius:50%;width:42px;height:42px;cursor:pointer;animation:pulse 1.5s infinite}
+@keyframes pulse{50%{transform:scale(1.2);box-shadow:0 0 0 12px #e5091422}}
+.status{padding:15px;border-bottom:1px solid #eee}
+.status small{display:block;color:#777;margin-top:6px}
+.badge{float:right;background:#e50914;color:white;padding:5px 10px;border-radius:15px;font-size:12px}
+.risks{display:grid;grid-template-columns:repeat(4,1fr)}
+.risk{text-align:center;padding:25px 8px;border-right:1px solid #eee}
+.risk strong{display:block;margin-top:10px;color:#e50914}
+.alert{padding:14px;border-bottom:1px solid #eee}
+.alert button,.btn{background:#e50914;color:white;border:0;padding:10px 15px;border-radius:7px;cursor:pointer;margin-top:10px}
+table{width:100%;border-collapse:collapse;background:white}
+td,th{padding:13px;border:1px solid #ddd;text-align:left}
+th{background:#e50914;color:white}
+input,textarea,select{width:100%;padding:12px;margin:8px 0 15px;border:1px solid #ccc;border-radius:7px}
+label{font-weight:bold}
+.info{background:#fff4e5;padding:12px;margin-bottom:15px;border-radius:8px;color:#805000}
+.green{color:green}
+@media(max-width:800px){
+.container{display:block}
+.sidebar{width:100%;display:flex;overflow-x:auto;padding:8px}
+.menu{white-space:nowrap;margin:3px;padding:12px}
+.main{padding:12px}
+.cards{grid-template-columns:repeat(2,1fr)}
+.grid{grid-template-columns:1fr}
+}
+@media(max-width:450px){
+.cards{grid-template-columns:1fr}
+.risks{grid-template-columns:repeat(2,1fr)}
+.header{padding:15px;font-size:13px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+ <div class="logo">🚨 Real-Time <span>Disaster Monitoring</span></div>
+ <div class="live">● LIVE <span id="time">2:43:56 PM</span></div>
+</header>
+
+<div class="container">
+
+<aside class="sidebar">
+ <div class="menu" onclick="showPage('dashboard',this)">🏠 Dashboard</div>
+ <div class="menu active" onclick="showPage('map',this)">🗺 Live Map</div>
+ <div class="menu" onclick="showPage('alerts',this)">🔔 Alerts</div>
+ <div class="menu" onclick="showPage('prediction',this)">📈 Predictions</div>
+ <div class="menu" onclick="showPage('reports',this)">📄 Reports</div>
+ <div class="menu" onclick="showPage('settings',this)">⚙ Settings</div>
+</aside>
+
+<main class="main">
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page">
+<h2>🏠 Dashboard</h2>
+
+<div id="connection" class="info">🔴 Backend connection failed. Check server and API URL.</div>
+
+<div class="cards">
+ <div class="card"><p>⚠ Active Alerts</p><div class="number" id="active">0</div></div>
+ <div class="card"><p>🌪 Severe Weather</p><div class="number" id="severe">0</div></div>
+ <div class="card"><p>🔥 Wildfire</p><div class="number" id="wildfire">0</div></div>
+ <div class="card"><p>🌊 Flood</p><div class="number" id="flood">0</div></div>
+</div>
+
+<div class="grid">
+ <div class="box">
+  <div class="box-title">📍 Live Disaster Map</div>
+  <div class="map">
+   <button class="marker" style="top:25%;left:35%" onclick="alert('Disaster marker')">🔥</button>
+   <button class="marker" style="top:55%;left:58%" onclick="alert('Disaster marker')">🌊</button>
+   <button class="marker" style="top:32%;left:70%" onclick="alert('Disaster marker')">🌪</button>
+   <button class="marker" style="top:70%;left:45%" onclick="alert('Disaster marker')">⚠</button>
+  </div>
+ </div>
+
+ <div class="box">
+  <div class="box-title">⚠ Current Disaster Status</div>
+  <div id="statusList"><div class="status">Waiting for data...</div></div>
+ </div>
+</div>
+
+<div class="grid">
+ <div class="box">
+  <div class="box-title">📈 Prediction &amp; Risk Analysis</div>
+  <div class="risks">
+   <div class="risk">🌪<p>Cyclone</p><strong id="cyclone">Medium</strong></div>
+   <div class="risk">🌊<p>Flood</p><strong id="floodRisk">--</strong></div>
+   <div class="risk">🔥<p>Wildfire</p><strong>Low</strong></div>
+   <div class="risk">〰<p>Earthquake</p><strong>Low</strong></div>
+  </div>
+ </div>
+ <div class="box">
+  <div class="box-title">🔔 Recent Alerts</div>
+  <div id="recent"><div class="alert">Waiting for live data...</div></div>
+ </div>
+</div>
+</section>
+
+<!-- LIVE MAP -->
+<section id="map" class="page active">
+<h2>🗺 Live Disaster Map</h2>
+<div class="info">Map markers are illustrative. They do not represent verified GPS locations.</div>
+<div class="box">
+ <div class="box-title">Live Disaster Monitoring Map</div>
+ <div class="map" style="height:450px">
+  <button class="marker" style="top:25%;left:35%" onclick="alert('Fire marker')">🔥</button>
+  <button class="marker" style="top:55%;left:58%" onclick="alert('Flood marker')">🌊</button>
+  <button class="marker" style="top:32%;left:70%" onclick="alert('Cyclone marker')">🌪</button>
+  <button class="marker" style="top:70%;left:45%" onclick="alert('Alert marker')">⚠</button>
+ </div>
+</div>
+<div class="box" style="margin-top:20px;padding:20px">
+ <h3>Weather Information</h3><br>
+ <p>📍 Location: <span id="location">Waiting...</span></p><br>
+ <p>🌧 Rainfall: <span id="rain">--</span> mm</p><br>
+ <p>🌡 Temperature: <span id="temp">--</span> °C</p><br>
+ <p>💨 Wind Speed: <span id="wind">--</span> km/h</p><br>
+ <p>🌊 Water Level: <span id="water">--</span>%</p>
+</div>
+</section>
+
+<!-- ALERTS -->
+<section id="alerts" class="page">
+<h2>🔔 Disaster Alerts</h2>
+<div class="box">
+ <div class="box-title">Current Alerts</div>
+ <div id="alertPage"><div class="alert">Waiting for live data...</div></div>
+</div>
+</section>
+
+<!-- PREDICTIONS -->
+<section id="prediction" class="page">
+<h2>📈 AI Prediction &amp; Risk Analysis</h2>
+<div class="info">Risk levels below are rule-based demonstrations, not verified AI forecasts.</div>
+<div class="cards">
+ <div class="card">🌪 Cyclone<div class="number" id="pCyclone">Medium</div></div>
+ <div class="card">🌊 Flood<div class="number" id="pFlood">--</div></div>
+ <div class="card">🔥 Wildfire<div class="number">Low</div></div>
+ <div class="card">〰 Earthquake<div class="number">Low</div></div>
+</div>
+<div class="box" style="margin-top:20px;padding:20px">
+ <h3>Weather Risk Analysis</h3><br>
+ <p>Rainfall: <b id="pRain">--</b> mm</p><br>
+ <p>Wind Speed: <b id="pWind">--</b> km/h</p><br>
+ <p>Water Level: <b id="pWater">--</b>%</p><br>
+ <p>Overall Risk: <b id="overall">Waiting for data</b></p>
+</div>
+</section>
+
+<!-- REPORTS -->
+<section id="reports" class="page">
+<h2>📄 Disaster Reports</h2>
+<div class="box" style="padding:20px">
+ <h3>Submit Disaster Report</h3><br>
+ <form id="reportForm">
+  <label>Disaster Type</label>
+  <select id="reportType" required="">
+   <option value="">Select type</option>
+   <option>Flood</option><option>Wildfire</option>
+   <option>Cyclone</option><option>Earthquake</option>
+   <option>Other</option>
+  </select>
+  <label>Location</label>
+  <input id="reportLocation" placeholder="Enter location" required="">
+  <label>Description</label>
+  <textarea id="reportDescription" placeholder="Describe the situation" required=""></textarea>
+  <button class="btn" type="submit">Submit Report</button>
+ </form>
+ <p id="reportMessage">Report saved in this browser.</p>
+</div>
+<div class="box" style="margin-top:20px">
+ <div class="box-title">Submitted Reports (This Browser)</div>
+ <div id="reportList"><div class="status"><b>Flood</b>
+  <small>cuddalore • 10/3/2026, 12:19:24 PM</small><p>medium</p></div><div class="status"><b>Flood</b>
+  <small>cuddalore • 10/3/2026, 12:44:36 PM</small><p>very heavy rain</p></div></div>
+</div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="page">
+<h2>⚙ Settings</h2>
+<div class="box" style="padding:20px">
+ <h3>System Settings</h3><br>
+ <label>Backend API URL</label>
+ <input id="apiUrl" value="http://localhost:5000/api/disaster-data">
+ <button class="btn" onclick="saveSettings()">Save API URL</button>
+ <button class="btn" onclick="loadData()">Test Connection</button>
+ <br><br>
+ <p id="settingMessage">Refresh interval: 5 seconds</p>
+ <br>
+ <button class="btn" onclick="location.reload()">Refresh Project</button>
+</div>
+</section>
+
+</main>
+</div>
+
+<script>
+let API_URL = "http://localhost:5000/api/disaster-data";
+let latestData = null;
+
+function showPage(id,element){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll(".menu").forEach(m=>m.classList.remove("active"));
+ element.classList.add("active");
+}
+
+document.getElementById("time").innerText=new Date().toLocaleTimeString();
+
+function value(obj,keys,defaultValue){
+ for(const key of keys){
+  if(obj && obj[key]!==undefined && obj[key]!==null) return obj[key];
+ }
+ return defaultValue;
+}
+
+function riskLevel(n){
+ if(n>=80)return "HIGH";
+ if(n>=50)return "MEDIUM";
+ return "LOW";
+}
+
+function updateDashboard(data){
+ latestData=data;
+
+ const rainfall=Number(value(data,["rainfall"],0));
+ const temperature=Number(value(data,["temperature"],0));
+ const wind=Number(value(data,["windSpeed","wind"],0));
+ const water=Number(value(data,["waterLevel"],0));
+ const location=value(data,["location"],"Unknown");
+ const level=value(data,["riskLevel"],riskLevel(Math.max(rainfall,wind,water)));
+
+ const disasters=Array.isArray(data.disasters)?data.disasters:[];
+ const severe=disasters.filter(d=>String(d.severity).toLowerCase()==="high").length;
+ const floods=disasters.filter(d=>String(d.type).toLowerCase().includes("flood")).length;
+ const fires=disasters.filter(d=>String(d.type).toLowerCase().includes("fire")).length;
+
+ document.getElementById("active").innerText=disasters.length;
+ document.getElementById("severe").innerText=severe;
+ document.getElementById("wildfire").innerText=fires;
+ document.getElementById("flood").innerText=floods;
+
+ document.getElementById("rain").innerText=rainfall;
+ document.getElementById("temp").innerText=temperature;
+ document.getElementById("wind").innerText=wind;
+ document.getElementById("water").innerText=water;
+ document.getElementById("location").innerText=location;
+
+ document.getElementById("pRain").innerText=rainfall;
+ document.getElementById("pWind").innerText=wind;
+ document.getElementById("pWater").innerText=water;
+
+ document.getElementById("overall").innerText=level;
+ document.getElementById("floodRisk").innerText=riskLevel(water);
+ document.getElementById("pFlood").innerText=riskLevel(water);
+ document.getElementById("cyclone").innerText=riskLevel(wind);
+ document.getElementById("pCyclone").innerText=riskLevel(wind);
+
+ const status=document.getElementById("statusList");
+ const alerts=document.getElementById("recent");
+ const alertPage=document.getElementById("alertPage");
+ status.innerHTML="";
+ alerts.innerHTML="";
+ alertPage.innerHTML="";
+
+ let items=disasters.length?disasters:[{
+  type:"Weather Monitoring",
+  location:location,
+  severity:level,
+  time:new Date().toLocaleTimeString()
+ }];
+
+ items.forEach(d=>{
+  const name=value(d,["type"],"Disaster");
+  const place=value(d,["location"],location);
+  const severity=value(d,["severity"],level);
+  const time=value(d,["time"],new Date().toLocaleTimeString());
+
+  status.innerHTML+=`<div class="status">
+   <span class="badge">${name==="Weather Monitoring"?level:severity}</span>
+   <b>${name}</b><small>${place} • ${time}</small>
+  </div>`;
+
+  const message=`${name} detected at ${place} - ${severity}`;
+  alerts.innerHTML+=`<div class="alert">🔴 ${message}</div>`;
+  alertPage.innerHTML+=`<div class="alert">🔴 ${message}<br><small>${time}</small></div>`;
+ });
+
+ document.getElementById("connection").innerHTML=
+ "🟢 Backend connected successfully. Data received from API.";
+ document.getElementById("serverTime").innerText=new Date().toLocaleTimeString();
+}
+
+function showDemo(){
+ const demo={
+  location:"Cuddalore, Tamil Nadu (Demo)",
+  rainfall:85,
+  temperature:29,
+  windSpeed:65,
+  waterLevel:82,
+  riskLevel:"HIGH"
+ };
+ updateDashboard(demo);
+ document.getElementById("connection").innerHTML=
+ "🟠 Backend not connected. Showing DEMO data only.";
+}
+
+async function loadData(){
+ try{
+  const response=await fetch(API_URL);
+  if(!response.ok) throw new Error("API error: "+response.status);
+  const data=await response.json();
+  updateDashboard(data);
+ }catch(error){
+  document.getElementById("connection").innerHTML=
+  "🔴 Backend connection failed. Check server and API URL.";
+  console.log(error);
+ }
+}
+
+function saveSettings(){
+ const url=document.getElementById("apiUrl").value.trim();
+ if(!url){alert("Enter API URL");return;}
+ API_URL=url;
+ document.getElementById("settingMessage").innerText="API URL saved.";
+ loadData();
+}
+
+document.getElementById("reportForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ const report={
+  type:document.getElementById("reportType").value,
+  location:document.getElementById("reportLocation").value,
+  description:document.getElementById("reportDescription").value,
+  time:new Date().toLocaleString()
+ };
+ let reports=JSON.parse(localStorage.getItem("disasterReports")||"[]");
+ reports.push(report);
+ localStorage.setItem("disasterReports",JSON.stringify(reports));
+ displayReports();
+ document.getElementById("reportMessage").innerText="Report saved in this browser.";
+ this.reset();
+});
+
+function displayReports(){
+ const reports=JSON.parse(localStorage.getItem("disasterReports")||"[]");
+ const list=document.getElementById("reportList");
+ list.innerHTML="";
+ if(!reports.length){list.innerHTML='<div class="alert">No reports submitted yet.</div>';return;}
+ reports.forEach(r=>{
+  list.innerHTML+=`<div class="status"><b>${r.type}</b>
+  <small>${r.location} • ${r.time}</small><p>${r.description}</p></div>`;
+ });
+}
+
+loadData();
+displayReports();
+setInterval(loadData,5000);
+setInterval(()=>{
+ document.getElementById("time").innerText=new Date().toLocaleTimeString();
+},1000);
+</script>
+
+
+</body></html>

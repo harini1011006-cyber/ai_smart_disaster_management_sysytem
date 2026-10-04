@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SOS & Victim Management</title>
+
+<style>
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background: #fff7f7;
+    color: #241414;
+}
+
+/* =========================================================
+   COLORS
+========================================================= */
+
+:root {
+    --red: #b30000;
+    --dark-red: #780000;
+    --bright-red: #e00000;
+    --light-red: #fff0f0;
+    --border-red: #f0bcbc;
+    --white: #ffffff;
+    --dark: #250000;
+    --gray: #777;
+    --green: #16803c;
+    --orange: #d97706;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header {
+    height: 78px;
+    background: linear-gradient(135deg, #7b0000, #c40000, #970000);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 35px;
+    box-shadow: 0 5px 20px rgba(120, 0, 0, 0.25);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    background: white;
+    color: var(--red);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.logo-text h1 {
+    font-size: 21px;
+    letter-spacing: 0.5px;
+}
+
+.logo-text p {
+    font-size: 11px;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.live-status {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 9px 15px;
+    border-radius: 30px;
+    font-size: 13px;
+}
+
+.live-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #55ff88;
+    border-radius: 50%;
+    margin-right: 7px;
+    box-shadow: 0 0 8px #55ff88;
+}
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.container {
+    display: flex;
+    min-height: calc(100vh - 78px);
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    width: 245px;
+    background: white;
+    border-right: 1px solid #f0d2d2;
+    padding: 25px 15px;
+}
+
+.menu-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #a66;
+    font-weight: bold;
+    padding: 0 15px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+.menu-item {
+    padding: 13px 15px;
+    margin-bottom: 7px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #5c3030;
+    font-size: 14px;
+    transition: 0.25s;
+}
+
+.menu-item:hover,
+.menu-item.active {
+    background: var(--light-red);
+    color: var(--red);
+    font-weight: 600;
+}
+
+.menu-icon {
+    font-size: 18px;
+    width: 23px;
+    text-align: center;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+    flex: 1;
+    padding: 30px;
+    overflow-x: hidden;
+}
+
+.page-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-title h2 {
+    color: var(--dark-red);
+    font-size: 28px;
+}
+
+.page-title p {
+    color: var(--gray);
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.date-box {
+    background: white;
+    border: 1px solid var(--border-red);
+    padding: 10px 16px;
+    border-radius: 10px;
+    color: var(--red);
+    font-size: 13px;
+}
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid #f1d5d5;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 5px 18px rgba(120,0,0,0.06);
+    transition: 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(120,0,0,0.12);
+}
+
+.stat-card h3 {
+    color: #777;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-number {
+    font-size: 29px;
+    font-weight: 700;
+    margin-top: 5px;
+    color: var(--dark-red);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+}
+
+.red-icon {
+    background: #ffe4e4;
+}
+
+.green-icon {
+    background: #e4f8eb;
+}
+
+.orange-icon {
+    background: #fff1db;
+}
+
+.dark-icon {
+    background: #eee5e5;
+}
+
+/* =========================================================
+   CONTENT GRID
+========================================================= */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 22px;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card {
+    background: white;
+    border: 1px solid #efd5d5;
+    border-radius: 17px;
+    box-shadow: 0 5px 18px rgba(100,0,0,0.06);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #f1dddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h3 {
+    color: var(--dark-red);
+    font-size: 17px;
+}
+
+.card-header span {
+    font-size: 12px;
+    color: var(--gray);
+}
+
+/* =========================================================
+   SOS PANEL
+========================================================= */
+
+.sos-panel {
+    padding: 25px;
+    background:
+        radial-gradient(circle at center, #fff 0%, #fff6f6 65%);
+    text-align: center;
+}
+
+.sos-button {
+    width: 155px;
+    height: 155px;
+    border-radius: 50%;
+    border: 10px solid #ffe0e0;
+    background: linear-gradient(145deg, #d50000, #850000);
+    color: white;
+    font-size: 30px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow:
+        0 0 0 8px #fff0f0,
+        0 12px 30px rgba(160,0,0,0.35);
+    transition: 0.25s;
+    position: relative;
+}
+
+.sos-button:hover {
+    transform: scale(1.04);
+}
+
+.sos-button:active {
+    transform: scale(0.96);
+}
+
+.sos-button small {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+.sos-description {
+    margin-top: 18px;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.emergency-info {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 10px;
+}
+
+.info-box {
+    background: #fff7f7;
+    border: 1px solid #f1d3d3;
+    padding: 12px 5px;
+    border-radius: 10px;
+}
+
+.info-box strong {
+    display: block;
+    color: var(--red);
+    font-size: 15px;
+}
+
+.info-box span {
+    font-size: 10px;
+    color: #777;
+}
+
+/* =========================================================
+   VICTIM LIST
+========================================================= */
+
+.victim-list {
+    padding: 10px 20px 20px;
+}
+
+.victim {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 5px;
+    border-bottom: 1px solid #f4e4e4;
+}
+
+.victim:last-child {
+    border-bottom: none;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #ffe2e2;
+    color: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.victim-info {
+    flex: 1;
+}
+
+.victim-info strong {
+    font-size: 14px;
+    color: #351414;
+}
+
+.victim-info p {
+    font-size: 11px;
+    color: #888;
+    margin-top: 3px;
+}
+
+.status {
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.status.pending {
+    background: #fff0d8;
+    color: #a45b00;
+}
+
+.status.rescued {
+    background: #e3f7e9;
+    color: #087532;
+}
+
+.status.critical {
+    background: #ffe0e0;
+    color: #b00000;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-card {
+    margin-top: 22px;
+}
+
+.table-tools {
+    display: flex;
+    gap: 10px;
+}
+
+.search {
+    border: 1px solid #edcccc;
+    border-radius: 8px;
+    padding: 8px 11px;
+    outline: none;
+    width: 190px;
+}
+
+.search:focus {
+    border-color: var(--red);
+}
+
+.filter {
+    border: 1px solid #edcccc;
+    border-radius: 8px;
+    padding: 8px 11px;
+    background: white;
+    color: #555;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 14px 20px;
+    background: #fff7f7;
+    color: #7b3b3b;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 15px 20px;
+    border-top: 1px solid #f3e1e1;
+    font-size: 13px;
+}
+
+.action-btn {
+    border: none;
+    padding: 7px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    background: #ffe5e5;
+    color: var(--red);
+    font-size: 11px;
+}
+
+.action-btn:hover {
+    background: var(--red);
+    color: white;
+}
+
+/* =========================================================
+   ALERT
+========================================================= */
+
+.alert-box {
+    margin-top: 22px;
+    background: linear-gradient(135deg,#fff0f0,#fffafa);
+    border: 1px solid #efbcbc;
+    border-left: 5px solid var(--red);
+    border-radius: 12px;
+    padding: 17px;
+    display: flex;
+    gap: 13px;
+    align-items: center;
+}
+
+.alert-icon {
+    font-size: 25px;
+}
+
+.alert-box strong {
+    color: var(--dark-red);
+    font-size: 14px;
+}
+
+.alert-box p {
+    color: #777;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(40,0,0,0.65);
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    padding: 20px;
+}
+
+.modal-content {
+    width: 420px;
+    max-width: 100%;
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    animation: popup 0.25s ease;
+}
+
+@keyframes popup {
+    from {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    background: linear-gradient(135deg,#8a0000,#d00000);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.close {
+    cursor: pointer;
+    font-size: 22px;
+}
+
+.modal-body {
+    padding: 22px;
+}
+
+.input-group {
+    margin-bottom: 14px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    color: #633;
+    margin-bottom: 6px;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #e5caca;
+    border-radius: 8px;
+    outline: none;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: var(--red);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 9px;
+    background: var(--red);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.submit-btn:hover {
+    background: var(--dark-red);
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    background: #260000;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    z-index: 1000;
+}
+
+.toast strong {
+    color: #ff5b5b;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px) {
+    .stats {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:750px) {
+
+    header {
+        padding: 0 15px;
+    }
+
+    .header-right {
+        display: none;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        padding: 18px;
+    }
+
+    .page-title {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .page-title h2 {
+        font-size: 22px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 14px;
+    }
+
+    .stat-number {
+        font-size: 23px;
+    }
+
+    .table-tools {
+        flex-direction: column;
+    }
+
+    .search {
+        width: 100%;
+    }
+}
+
+@media(max-width:450px) {
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .emergency-info {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =======================================================
+     HEADER
+======================================================= -->
+
+<header>
+
+    <div class="logo-section">
+
+        <div class="logo">SOS</div>
+
+        <div class="logo-text">
+            <h1>SOS & Victim Management</h1>
+            <p>Emergency Response & Rescue Management System</p>
+        </div>
+
+    </div>
+
+    <div class="header-right">
+
+        <div class="live-status">
+            <span class="live-dot"></span>
+            System Online
+        </div>
+
+        <div>👤 Admin</div>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+<!-- =======================================================
+     SIDEBAR
+======================================================= -->
+
+<aside class="sidebar">
+
+    <div class="menu-title">Main Menu</div>
+
+    <div class="menu-item active">
+        <span class="menu-icon">📊</span>
+        Dashboard
+    </div>
+
+    <div class="menu-item" onclick="openVictimModal()">
+        <span class="menu-icon">🚑</span>
+        Victim Management
+    </div>
+
+    <div class="menu-item">
+        <span class="menu-icon">📍</span>
+        Live Locations
+    </div>
+
+    <div class="menu-item">
+        <span class="menu-icon">🚨</span>
+        Emergency Alerts
+    </div>
+
+    <div class="menu-item">
+        <span class="menu-icon">👥</span>
+        Rescue Teams
+    </div>
+
+    <br>
+
+    <div class="menu-title">System</div>
+
+    <div class="menu-item">
+        <span class="menu-icon">📈</span>
+        Reports
+    </div>
+
+    <div class="menu-item">
+        <span class="menu-icon">⚙️</span>
+        Settings
+    </div>
+
+</aside>
+
+
+<!-- =======================================================
+     MAIN
+======================================================= -->
+
+<main class="main">
+
+    <div class="page-title">
+
+        <div>
+            <h2>SOS & Victim Dashboard</h2>
+            <p>Monitor emergency requests and manage victims in real time.</p>
+        </div>
+
+        <div class="date-box">
+            📅 <span id="currentDate"></span>
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         STATISTICS
+    =================================================== -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+
+            <div>
+                <h3>Total Victims</h3>
+                <div class="stat-number" id="totalVictims">24</div>
+            </div>
+
+            <div class="stat-icon red-icon">👥</div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div>
+                <h3>Active SOS</h3>
+                <div class="stat-number" id="activeSOS">08</div>
+            </div>
+
+            <div class="stat-icon red-icon">🚨</div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div>
+                <h3>Rescued</h3>
+                <div class="stat-number">16</div>
+            </div>
+
+            <div class="stat-icon green-icon">✓</div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div>
+                <h3>Response Teams</h3>
+                <div class="stat-number">06</div>
+            </div>
+
+            <div class="stat-icon orange-icon">🚑</div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         MAIN CONTENT
+    =================================================== -->
+
+    <section class="content-grid">
+
+
+        <!-- SOS CARD -->
+
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Emergency SOS</h3>
+                <span>Instant Alert</span>
+            </div>
+
+            <div class="sos-panel">
+
+                <button class="sos-button" onclick="sendSOS()">
+                    SOS
+                    <small>SEND ALERT</small>
+                </button>
+
+                <p class="sos-description">
+                    Press the SOS button during an emergency.
+                    Your location and emergency request will be
+                    sent to the response team.
+                </p>
+
+                <div class="emergency-info">
+
+                    <div class="info-box">
+                        <strong>24/7</strong>
+                        <span>Monitoring</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>06</strong>
+                        <span>Teams Ready</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>03 min</strong>
+                        <span>Avg Response</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RECENT VICTIMS -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h3>Recent Victims</h3>
+
+                <span>View All →</span>
+
+            </div>
+
+            <div class="victim-list">
+
+                <div class="victim">
+
+                    <div class="avatar">AK</div>
+
+                    <div class="victim-info">
+                        <strong>Arun Kumar</strong>
+                        <p>📍 Chennai · 2 mins ago</p>
+                    </div>
+
+                    <span class="status critical">Critical</span>
+
+                </div>
+
+
+                <div class="victim">
+
+                    <div class="avatar">PS</div>
+
+                    <div class="victim-info">
+                        <strong>Priya S</strong>
+                        <p>📍 Tambaram · 8 mins ago</p>
+                    </div>
+
+                    <span class="status pending">Pending</span>
+
+                </div>
+
+
+                <div class="victim">
+
+                    <div class="avatar">RM</div>
+
+                    <div class="victim-info">
+                        <strong>Ravi M</strong>
+                        <p>📍 Avadi · 15 mins ago</p>
+                    </div>
+
+                    <span class="status rescued">Rescued</span>
+
+                </div>
+
+
+                <div class="victim">
+
+                    <div class="avatar">SK</div>
+
+                    <div class="victim-info">
+                        <strong>Sanjay K</strong>
+                        <p>📍 Velachery · 21 mins ago</p>
+                    </div>
+
+                    <span class="status pending">Pending</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         VICTIM TABLE
+    =================================================== -->
+
+    <section class="card table-card">
+
+        <div class="card-header">
+
+            <h3>Victim Records</h3>
+
+            <div class="table-tools">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search"
+                    placeholder="Search victim..."
+                    onkeyup="searchVictims()"
+                >
+
+                <select class="filter" onchange="filterVictims(this.value)">
+                    <option value="all">All Status</option>
+                    <option value="critical">Critical</option>
+                    <option value="pending">Pending</option>
+                    <option value="rescued">Rescued</option>
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Victim Name</th>
+                        <th>Location</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="victimTable">
+
+                    <tr data-status="critical">
+                        <td>#V001</td>
+                        <td>Arun Kumar</td>
+                        <td>Chennai</td>
+                        <td>9876543210</td>
+                        <td>
+                            <span class="status critical">Critical</span>
+                        </td>
+                        <td>
+                            <button class="action-btn"
+                            onclick="viewVictim('Arun Kumar')">
+                                View
+                            </button>
+                        </td>
+                    </tr>
+
+
+                    <tr data-status="pending">
+                        <td>#V002</td>
+                        <td>Priya S</td>
+                        <td>Tambaram</td>
+                        <td>9876501234</td>
+                        <td>
+                            <span class="status pending">Pending</span>
+                        </td>
+                        <td>
+                            <button class="action-btn"
+                            onclick="viewVictim('Priya S')">
+                                View
+                            </button>
+                        </td>
+                    </tr>
+
+
+                    <tr data-status="rescued">
+                        <td>#V003</td>
+                        <td>Ravi M</td>
+                        <td>Avadi</td>
+                        <td>9876512345</td>
+                        <td>
+                            <span class="status rescued">Rescued</span>
+                        </td>
+                        <td>
+                            <button class="action-btn"
+                            onclick="viewVictim('Ravi M')">
+                                View
+                            </button>
+                        </td>
+                    </tr>
+
+
+                    <tr data-status="pending">
+                        <td>#V004</td>
+                        <td>Sanjay K</td>
+                        <td>Velachery</td>
+                        <td>9876598765</td>
+                        <td>
+                            <span class="status pending">Pending</span>
+                        </td>
+                        <td>
+                            <button class="action-btn"
+                            onclick="viewVictim('Sanjay K')">
+                                View
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- ALERT -->
+
+    <div class="alert-box">
+
+        <div class="alert-icon">⚠️</div>
+
+        <div>
+            <strong>Emergency Monitoring Active</strong>
+
+            <p>
+                The system is currently monitoring SOS requests
+                and victim locations. Response teams are available.
+            </p>
+        </div>
+
+    </div>
+
+</main>
+
+</div>
+
+
+<!-- =======================================================
+     ADD VICTIM MODAL
+======================================================= -->
+
+<div class="modal" id="victimModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <strong>Add New Victim</strong>
+
+            <span class="close" onclick="closeVictimModal()">×</span>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div class="input-group">
+                <label>Victim Name</label>
+                <input type="text" id="victimName"
+                       placeholder="Enter victim name">
+            </div>
+
+            <div class="input-group">
+                <label>Location</label>
+                <input type="text" id="victimLocation"
+                       placeholder="Enter location">
+            </div>
+
+            <div class="input-group">
+                <label>Contact Number</label>
+                <input type="text" id="victimContact"
+                       placeholder="Enter contact number">
+            </div>
+
+            <div class="input-group">
+                <label>Status</label>
+
+                <select id="victimStatus">
+                    <option value="pending">Pending</option>
+                    <option value="critical">Critical</option>
+                    <option value="rescued">Rescued</option>
+                </select>
+
+            </div>
+
+            <button class="submit-btn" onclick="addVictim()">
+                + Add Victim
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* =========================================================
+   DATE
+========================================================= */
+
+const today = new Date();
+
+document.getElementById("currentDate").textContent =
+    today.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+
+
+/* =========================================================
+   SOS
+========================================================= */
+
+function sendSOS() {
+
+    const confirmed =
+        confirm(
+            "🚨 EMERGENCY SOS\n\n" +
+            "Are you sure you want to send an emergency alert?"
+        );
+
+    if (!confirmed) return;
+
+    const active =
+        document.getElementById("activeSOS");
+
+    let count =
+        parseInt(active.textContent);
+
+    count++;
+
+    active.textContent =
+        String(count).padStart(2, "0");
+
+    showToast(
+        "🚨 SOS ALERT SENT — Response team notified!"
+    );
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openVictimModal() {
+
+    document.getElementById("victimModal")
+        .style.display = "flex";
+}
+
+function closeVictimModal() {
+
+    document.getElementById("victimModal")
+        .style.display = "none";
+}
+
+window.onclick = function(event) {
+
+    const modal =
+        document.getElementById("victimModal");
+
+    if (event.target === modal) {
+        closeVictimModal();
+    }
+};
+
+
+/* =========================================================
+   ADD VICTIM
+========================================================= */
+
+function addVictim() {
+
+    const name =
+        document.getElementById("victimName").value.trim();
+
+    const location =
+        document.getElementById("victimLocation").value.trim();
+
+    const contact =
+        document.getElementById("victimContact").value.trim();
+
+    const status =
+        document.getElementById("victimStatus").value;
+
+    if (!name || !location || !contact) {
+
+        showToast("⚠️ Please fill all fields.");
+
+        return;
+    }
+
+    const table =
+        document.getElementById("victimTable");
+
+    const id =
+        "#V" +
+        String(table.rows.length + 1).padStart(3,"0");
+
+    const row =
+        document.createElement("tr");
+
+    row.dataset.status = status;
+
+    row.innerHTML = `
+        <td>${id}</td>
+
+        <td>${name}</td>
+
+        <td>${location}</td>
+
+        <td>${contact}</td>
+
+        <td>
+            <span class="status ${status}">
+                ${capitalize(status)}
+            </span>
+        </td>
+
+        <td>
+            <button
+                class="action-btn"
+                onclick="viewVictim('${name}')">
+                View
+            </button>
+        </td>
+    `;
+
+    table.appendChild(row);
+
+    const total =
+        document.getElementById("totalVictims");
+
+    total.textContent =
+        parseInt(total.textContent) + 1;
+
+    closeVictimModal();
+
+    document.getElementById("victimName").value = "";
+    document.getElementById("victimLocation").value = "";
+    document.getElementById("victimContact").value = "";
+
+    showToast("✓ Victim added successfully.");
+}
+
+
+/* =========================================================
+   VIEW VICTIM
+========================================================= */
+
+function viewVictim(name) {
+
+    showToast(
+        "👤 Victim profile: " + name
+    );
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function searchVictims() {
+
+    const search =
+        document.getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const rows =
+        document.querySelectorAll("#victimTable tr");
+
+    rows.forEach(row => {
+
+        const text =
+            row.innerText.toLowerCase();
+
+        row.style.display =
+            text.includes(search)
+                ? ""
+                : "none";
+
+    });
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function filterVictims(status) {
+
+    const rows =
+        document.querySelectorAll("#victimTable tr");
+
+    rows.forEach(row => {
+
+        if (status === "all") {
+
+            row.style.display = "";
+
+        } else {
+
+            row.style.display =
+                row.dataset.status === status
+                    ? ""
+                    : "none";
+        }
+
+    });
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.innerHTML =
+        message;
+
+    toast.style.display =
+        "block";
+
+    setTimeout(() => {
+
+        toast.style.display =
+            "none";
+
+    }, 3000);
+}
+
+
+/* =========================================================
+   CAPITALIZE
+========================================================= */
+
+function capitalize(text) {
+
+    return text.charAt(0).toUpperCase()
+        + text.slice(1);
+}
+
+</script>
+
+</body>
+</html>

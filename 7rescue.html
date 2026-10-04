@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rescue Team Management</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background: #f5f5f5;
+    color: #333;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    background: linear-gradient(180deg,#8b0000,#c40000,#650000);
+    color: white;
+    padding: 25px 18px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.tagline {
+    font-size: 11px;
+    color: #ffdada;
+    margin-bottom: 40px;
+}
+
+.menu-title {
+    font-size: 11px;
+    color: #ffcaca;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.menu-item {
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 9px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.menu-item:hover,
+.menu-item.active {
+    background: rgba(255,255,255,0.22);
+}
+
+.menu-item span {
+    margin-right: 10px;
+}
+
+/* MAIN */
+.main {
+    margin-left: 260px;
+    padding: 25px 30px;
+}
+
+/* TOPBAR */
+.topbar {
+    background: white;
+    padding: 18px 25px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    margin-bottom: 28px;
+}
+
+.topbar h3 {
+    color: #8b0000;
+}
+
+.admin {
+    color: #a00000;
+    font-weight: bold;
+}
+
+/* HEADING */
+.heading {
+    margin-bottom: 25px;
+}
+
+.heading h1 {
+    font-size: 28px;
+    color: #8b0000;
+    margin-bottom: 7px;
+}
+
+.heading p {
+    color: #777;
+    font-size: 14px;
+}
+
+/* STATS */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 23px;
+    border-radius: 12px;
+    border-left: 5px solid #a00000;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+}
+
+.stat-icon {
+    font-size: 25px;
+    margin-bottom: 12px;
+}
+
+.stat-card p {
+    color: #777;
+    font-size: 13px;
+}
+
+.stat-card h2 {
+    color: #8b0000;
+    font-size: 28px;
+    margin-top: 9px;
+}
+
+/* CONTENT */
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1.7fr;
+    gap: 22px;
+}
+
+.panel {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    margin-bottom: 22px;
+}
+
+.panel h2 {
+    color: #8b0000;
+    font-size: 19px;
+    margin-bottom: 20px;
+}
+
+/* FORM */
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 13px 0 7px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    outline: none;
+    font-size: 13px;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #a00000;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 65px;
+}
+
+.btn {
+    background: #a00000;
+    color: white;
+    border: none;
+    padding: 12px 17px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 16px;
+}
+
+.btn:hover {
+    background: #700000;
+}
+
+.cancel {
+    background: #777;
+    margin-left: 5px;
+}
+
+/* SEARCH */
+.search {
+    margin-bottom: 17px;
+}
+
+/* TABLE */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th, td {
+    padding: 13px 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    font-size: 13px;
+}
+
+th {
+    background: #fff0f0;
+    color: #8b0000;
+}
+
+.status {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    background: #e3f8e8;
+    color: #16803c;
+}
+
+.busy {
+    background: #fff0d9;
+    color: #b56a00;
+}
+
+.offline {
+    background: #ffe3e3;
+    color: #b00000;
+}
+
+.action {
+    border: none;
+    padding: 7px 10px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.edit {
+    background: #2878bd;
+}
+
+.delete {
+    background: #c40000;
+}
+
+.empty {
+    text-align: center;
+    color: #888;
+    padding: 25px;
+}
+
+/* MESSAGE */
+#message {
+    display: none;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 7px;
+    font-size: 13px;
+}
+
+/* TEAM CARDS */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 15px;
+}
+
+.team-card {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 17px;
+    text-align: center;
+}
+
+.team-card .icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.team-card h3 {
+    color: #8b0000;
+    font-size: 15px;
+    margin-bottom: 7px;
+}
+
+.team-card p {
+    font-size: 12px;
+    color: #777;
+    margin: 5px 0;
+}
+
+@media(max-width:1100px) {
+    .stats {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:700px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+    <div class="logo">🚨 DISASTER AI</div>
+
+    <div class="tagline">
+        Stay Alert • Stay Safe • Save Lives
+    </div>
+
+    <div class="menu-title">MAIN MENU</div>
+
+    <div class="menu-item">▦ Dashboard</div>
+    <div class="menu-item">⚠ Emergency Alerts</div>
+    <div class="menu-item">🆘 SOS Management</div>
+    <div class="menu-item active">🚑 Rescue Teams</div>
+    <div class="menu-item">📋 Scheme Management</div>
+    <div class="menu-item">🏠 Relief Shelters</div>
+    <div class="menu-item">📦 Resources</div>
+    <div class="menu-item">🗺 Map & Location</div>
+    <div class="menu-item">⚙ Settings</div>
+
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+    <div class="topbar">
+        <h3>🚑 Rescue Team Management</h3>
+        <div class="admin">● System Online | Admin</div>
+    </div>
+
+    <div class="heading">
+        <h1>Rescue Team Dashboard</h1>
+        <p>Monitor rescue teams, manage members and track emergency response activities.</p>
+    </div>
+
+    <div id="message"></div>
+
+    <!-- STATISTICS -->
+    <section class="stats">
+
+        <div class="stat-card">
+            <div class="stat-icon">🚑</div>
+            <p>Total Rescue Teams</p>
+            <h2 id="total">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🟢</div>
+            <p>Available Teams</p>
+            <h2 id="available">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🚨</div>
+            <p>On-Duty Teams</p>
+            <h2 id="onduty">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <p>Total Members</p>
+            <h2 id="members">0</h2>
+        </div>
+
+    </section>
+
+    <section class="content">
+
+        <!-- ADD TEAM FORM -->
+        <div class="panel">
+
+            <h2 id="formTitle">➕ Add Rescue Team</h2>
+
+            <form id="teamForm">
+
+                <input type="hidden" id="teamId">
+
+                <label>Team Name *</label>
+                <input type="text" id="teamName"
+                placeholder="Enter team name" required>
+
+                <label>Team Leader *</label>
+                <input type="text" id="leader"
+                placeholder="Enter team leader name" required>
+
+                <label>Contact Number *</label>
+                <input type="tel" id="phone"
+                placeholder="Enter phone number"
+                pattern="[0-9]{10}" maxlength="10" required>
+
+                <label>Team Members *</label>
+                <input type="number" id="memberCount"
+                placeholder="Number of members" min="1" required>
+
+                <label>Rescue Specialization</label>
+                <select id="specialization" required>
+                    <option value="">Select Specialization</option>
+                    <option>Flood Rescue</option>
+                    <option>Fire Rescue</option>
+                    <option>Medical Rescue</option>
+                    <option>Building Collapse Rescue</option>
+                    <option>Water Rescue</option>
+                    <option>General Emergency</option>
+                </select>
+
+                <label>Team Location *</label>
+                <input type="text" id="location"
+                placeholder="Enter team location" required>
+
+                <label>Team Status</label>
+                <select id="status">
+                    <option>Available</option>
+                    <option>On Duty</option>
+                    <option>Unavailable</option>
+                </select>
+
+                <label>Assigned Vehicle</label>
+                <input type="text" id="vehicle"
+                placeholder="Enter vehicle details">
+
+                <button type="submit" class="btn" id="submitBtn">
+                    Add Rescue Team
+                </button>
+
+                <button type="button" class="btn cancel"
+                onclick="resetForm()">Clear</button>
+
+            </form>
+        </div>
+
+        <!-- TEAM LIST -->
+        <div class="panel">
+
+            <h2>📋 Rescue Team List</h2>
+
+            <input type="text" class="search" id="search"
+            placeholder="🔍 Search team, leader or location..."
+            oninput="renderTeams()">
+
+            <div class="table-wrap">
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Team Name</th>
+                            <th>Leader</th>
+                            <th>Members</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="teamTable">
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- TEAM OVERVIEW -->
+    <div class="panel">
+
+        <h2>🚑 Rescue Team Overview</h2>
+
+        <div class="team-grid" id="teamCards">
+
+        </div>
+
+    </div>
+
+</main>
+
+<script>
+
+// INITIAL SAMPLE DATA
+let teams = JSON.parse(localStorage.getItem("rescueTeams")) || [
+    {
+        id: 1,
+        teamName: "Alpha Rescue Team",
+        leader: "Arun Kumar",
+        phone: "9876543210",
+        memberCount: 8,
+        specialization: "Flood Rescue",
+        location: "Chennai",
+        status: "Available",
+        vehicle: "Rescue Van"
+    },
+    {
+        id: 2,
+        teamName: "Bravo Rescue Team",
+        leader: "Karthik",
+        phone: "9876543211",
+        memberCount: 6,
+        specialization: "Medical Rescue",
+        location: "Coimbatore",
+        status: "On Duty",
+        vehicle: "Ambulance"
+    },
+    {
+        id: 3,
+        teamName: "Charlie Rescue Team",
+        leader: "Prakash",
+        phone: "9876543212",
+        memberCount: 10,
+        specialization: "Fire Rescue",
+        location: "Madurai",
+        status: "Available",
+        vehicle: "Fire Rescue Van"
+    }
+];
+
+function saveData() {
+    localStorage.setItem("rescueTeams", JSON.stringify(teams));
+}
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[c]);
+}
+
+// UPDATE STATISTICS
+function updateStats() {
+
+    document.getElementById("total").textContent = teams.length;
+
+    document.getElementById("available").textContent =
+        teams.filter(t => t.status === "Available").length;
+
+    document.getElementById("onduty").textContent =
+        teams.filter(t => t.status === "On Duty").length;
+
+    document.getElementById("members").textContent =
+        teams.reduce((sum, t) => sum + Number(t.memberCount), 0);
+
+}
+
+// STATUS DESIGN
+function statusClass(status) {
+
+    if (status === "Available") return "status";
+
+    if (status === "On Duty") return "status busy";
+
+    return "status offline";
+}
+
+// DISPLAY TABLE
+function renderTeams() {
+
+    const table = document.getElementById("teamTable");
+
+    const search = document.getElementById("search")
+    .value.toLowerCase();
+
+    const filtered = teams.filter(t =>
+        t.teamName.toLowerCase().includes(search) ||
+        t.leader.toLowerCase().includes(search) ||
+        t.location.toLowerCase().includes(search)
+    );
+
+    if (filtered.length === 0) {
+
+        table.innerHTML =
+        '<tr><td colspan="6" class="empty">No rescue teams found</td></tr>';
+
+        return;
+    }
+
+    table.innerHTML = filtered.map(t => `
+
+        <tr>
+
+            <td><strong>${escapeHTML(t.teamName)}</strong></td>
+
+            <td>${escapeHTML(t.leader)}</td>
+
+            <td>${t.memberCount}</td>
+
+            <td>${escapeHTML(t.location)}</td>
+
+            <td>
+                <span class="${statusClass(t.status)}">
+                    ${escapeHTML(t.status)}
+                </span>
+            </td>
+
+            <td>
+                <button class="action edit"
+                onclick="editTeam(${t.id})">Edit</button>
+
+                <button class="action delete"
+                onclick="deleteTeam(${t.id})">Delete</button>
+            </td>
+
+        </tr>
+
+    `).join("");
+
+    renderCards();
+}
+
+// DISPLAY CARDS
+function renderCards() {
+
+    const cards = document.getElementById("teamCards");
+
+    if (teams.length === 0) {
+        cards.innerHTML = "<p>No teams available.</p>";
+        return;
+    }
+
+    cards.innerHTML = teams.map(t => `
+
+        <div class="team-card">
+
+            <div class="icon">🚑</div>
+
+            <h3>${escapeHTML(t.teamName)}</h3>
+
+            <p>👤 Leader: ${escapeHTML(t.leader)}</p>
+
+            <p>👥 Members: ${t.memberCount}</p>
+
+            <p>📍 ${escapeHTML(t.location)}</p>
+
+            <p>🛠 ${escapeHTML(t.specialization)}</p>
+
+            <p>
+                <span class="${statusClass(t.status)}">
+                    ${escapeHTML(t.status)}
+                </span>
+            </p>
+
+        </div>
+
+    `).join("");
+
+}
+
+// ADD / UPDATE TEAM
+document.getElementById("teamForm")
+.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const id = document.getElementById("teamId").value;
+
+    const team = {
+
+        id: id ? Number(id) : Date.now(),
+
+        teamName: document.getElementById("teamName").value.trim(),
+
+        leader: document.getElementById("leader").value.trim(),
+
+        phone: document.getElementById("phone").value,
+
+        memberCount: Number(document.getElementById("memberCount").value),
+
+        specialization: document.getElementById("specialization").value,
+
+        location: document.getElementById("location").value.trim(),
+
+        status: document.getElementById("status").value,
+
+        vehicle: document.getElementById("vehicle").value.trim()
+
+    };
+
+    if (id) {
+
+        teams = teams.map(t =>
+            t.id === Number(id) ? team : t
+        );
+
+        showMessage("Rescue team updated successfully!");
+
+    } else {
+
+        teams.push(team);
+
+        showMessage("New rescue team added successfully!");
+
+    }
+
+    saveData();
+
+    resetForm();
+
+    renderAll();
+
+});
+
+// EDIT TEAM
+function editTeam(id) {
+
+    const t = teams.find(team => team.id === id);
+
+    if (!t) return;
+
+    document.getElementById("teamId").value = t.id;
+
+    document.getElementById("teamName").value = t.teamName;
+
+    document.getElementById("leader").value = t.leader;
+
+    document.getElementById("phone").value = t.phone;
+
+    document.getElementById("memberCount").value = t.memberCount;
+
+    document.getElementById("specialization").value = t.specialization;
+
+    document.getElementById("location").value = t.location;
+
+    document.getElementById("status").value = t.status;
+
+    document.getElementById("vehicle").value = t.vehicle;
+
+    document.getElementById("formTitle").textContent =
+    "✏️ Update Rescue Team";
+
+    document.getElementById("submitBtn").textContent =
+    "Update Team";
+
+    window.scrollTo({top: 0, behavior: "smooth"});
+
+}
+
+// DELETE TEAM
+function deleteTeam(id) {
+
+    if (!confirm("Are you sure you want to delete this rescue team?")) {
+        return;
+    }
+
+    teams = teams.filter(t => t.id !== id);
+
+    saveData();
+
+    renderAll();
+
+    showMessage("Rescue team deleted successfully!");
+
+}
+
+// RESET FORM
+function resetForm() {
+
+    document.getElementById("teamForm").reset();
+
+    document.getElementById("teamId").value = "";
+
+    document.getElementById("formTitle").textContent =
+    "➕ Add Rescue Team";
+
+    document.getElementById("submitBtn").textContent =
+    "Add Rescue Team";
+
+}
+
+// MESSAGE
+function showMessage(message) {
+
+    const box = document.getElementById("message");
+
+    box.textContent = message;
+
+    box.style.display = "block";
+
+    box.style.background = "#e1f8e9";
+
+    box.style.color = "#16803c";
+
+    setTimeout(() => {
+        box.style.display = "none";
+    }, 3000);
+
+}
+
+// REFRESH ALL
+function renderAll() {
+
+    renderTeams();
+
+    updateStats();
+
+}
+
+// INITIAL LOAD
+renderAll();
+
+</script>
+
+</body>
+</html>
