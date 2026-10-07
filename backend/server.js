@@ -21,6 +21,9 @@ const sosRequests = [];
 const alerts = [];
 const disasters = [];
 const rescueTeams = [];
+const liveVictims = [];
+
+const liveTeams = [];
 const shelters = [
     {
         id: 1,
@@ -436,13 +439,26 @@ app.post("/api/rescue-teams", (req, res) => {
     });
 });
 
-// =====================================================
+//// =====================================================
 // 8. AI RESCUE ROUTE & LIVE TRACKING
+// =====================================================
 // API: POST /api/rescue-route
 // API: GET /api/live-tracking
+// API: GET /api/live-dashboard
+// API: POST /api/victims
+// API: POST /api/teams
+// API: PUT /api/victims/:id
+// API: GET /api/route/:id
+// API: PUT /api/teams/:id/location
 // =====================================================
 
+
+// -----------------------------------------------------
+// AI RESCUE ROUTE
+// -----------------------------------------------------
+
 app.post("/api/rescue-route", (req, res) => {
+
     const {
         startLocation,
         destination,
@@ -463,9 +479,16 @@ app.post("/api/rescue-route", (req, res) => {
             routeType: "AI Recommended"
         }
     });
+
 });
 
+
+// -----------------------------------------------------
+// LIVE TRACKING BASIC API
+// -----------------------------------------------------
+
 app.get("/api/live-tracking", (req, res) => {
+
     res.json({
         success: true,
         data: {
@@ -474,17 +497,335 @@ app.get("/api/live-tracking", (req, res) => {
                 name: "Rescue Team Alpha",
                 latitude: 11.0168,
                 longitude: 76.9558,
-                status: "Moving"
+                status: "Available"
             },
+
             victim: {
                 latitude: 11.0200,
                 longitude: 76.9600,
                 status: "Waiting for Rescue"
             },
+
             lastUpdated: new Date().toISOString()
         }
     });
+
 });
+
+
+// -----------------------------------------------------
+// GET LIVE DASHBOARD
+// -----------------------------------------------------
+
+app.get("/api/live-dashboard", (req, res) => {
+
+    const activeVictims = liveVictims.filter(
+        victim => victim.status !== "Rescued"
+    ).length;
+
+    const rescuedVictims = liveVictims.filter(
+        victim => victim.status === "Rescued"
+    ).length;
+
+    const availableTeams = liveTeams.filter(
+        team => team.status === "Available"
+    ).length;
+
+    res.json({
+        success: true,
+
+        data: {
+            totalVictims: liveVictims.length,
+            activeVictims: activeVictims,
+            rescuedVictims: rescuedVictims,
+            availableTeams: availableTeams,
+
+            victims: liveVictims,
+            teams: liveTeams,
+
+            lastUpdated: new Date().toISOString()
+        }
+    });
+
+});
+
+
+// -----------------------------------------------------
+// ADD VICTIM
+// -----------------------------------------------------
+
+app.post("/api/victims", (req, res) => {
+
+    const {
+        name,
+        phone,
+        latitude,
+        longitude
+    } = req.body;
+
+    if (!name || !phone || latitude === undefined || longitude === undefined) {
+
+        return res.status(400).json({
+            success: false,
+            message: "Victim name, phone, latitude and longitude are required"
+        });
+
+    }
+
+    const victim = {
+
+        id: liveVictims.length + 1,
+
+        name: name,
+
+        phone: phone,
+
+        latitude: Number(latitude),
+
+        longitude: Number(longitude),
+
+        status: "Pending",
+
+        createdAt: new Date().toISOString()
+
+    };
+
+    liveVictims.push(victim);
+
+    res.status(201).json({
+
+        success: true,
+
+        message: "Emergency victim registered successfully",
+
+        data: victim
+
+    });
+
+});
+
+
+// -----------------------------------------------------
+// ADD RESCUE TEAM
+// -----------------------------------------------------
+
+app.post("/api/teams", (req, res) => {
+
+    const {
+        name,
+        members,
+        latitude,
+        longitude
+    } = req.body;
+
+    if (!name || latitude === undefined || longitude === undefined) {
+
+        return res.status(400).json({
+            success: false,
+            message: "Team name, latitude and longitude are required"
+        });
+
+    }
+
+    const team = {
+
+        id: liveTeams.length + 1,
+
+        name: name,
+
+        members: Number(members) || 1,
+
+        latitude: Number(latitude),
+
+        longitude: Number(longitude),
+
+        status: "Available",
+
+        createdAt: new Date().toISOString()
+
+    };
+
+    liveTeams.push(team);
+
+    res.status(201).json({
+
+        success: true,
+
+        message: "Rescue team added successfully",
+
+        data: team
+
+    });
+
+});
+
+
+// -----------------------------------------------------
+// UPDATE VICTIM STATUS
+// -----------------------------------------------------
+
+app.put("/api/victims/:id", (req, res) => {
+
+    const id = Number(req.params.id);
+
+    const victim = liveVictims.find(
+        item => item.id === id
+    );
+
+    if (!victim) {
+
+        return res.status(404).json({
+            success: false,
+            message: "Victim not found"
+        });
+
+    }
+
+    victim.status = req.body.status || victim.status;
+
+    res.json({
+
+        success: true,
+
+        message: "Victim status updated successfully",
+
+        data: victim
+
+    });
+
+});
+
+
+// -----------------------------------------------------
+// FIND NEAREST RESCUE TEAM
+// -----------------------------------------------------
+
+app.get("/api/route/:id", (req, res) => {
+
+    const victimId = Number(req.params.id);
+
+    const victim = liveVictims.find(
+        item => item.id === victimId
+    );
+
+    if (!victim) {
+
+        return res.status(404).json({
+            success: false,
+            message: "Victim not found"
+        });
+
+    }
+
+    const availableTeams = liveTeams.filter(
+        team => team.status === "Available"
+    );
+
+    if (availableTeams.length === 0) {
+
+        return res.status(404).json({
+            success: false,
+            message: "No available rescue team found"
+        });
+
+    }
+
+    const distance = (team) => {
+
+        const latDifference =
+            Number(team.latitude) - Number(victim.latitude);
+
+        const lngDifference =
+            Number(team.longitude) - Number(victim.longitude);
+
+        return Math.sqrt(
+            (latDifference * latDifference) +
+            (lngDifference * lngDifference)
+        );
+
+    };
+
+    const nearestTeam = availableTeams.reduce(
+        (nearest, team) => {
+
+            return distance(team) < distance(nearest)
+                ? team
+                : nearest;
+
+        }
+    );
+
+    const approxDistance =
+        distance(nearestTeam) * 111;
+
+    res.json({
+
+        success: true,
+
+        victim: victim,
+
+        nearestTeam: nearestTeam,
+
+        distance: Number(approxDistance.toFixed(2))
+
+    });
+
+});
+
+
+// -----------------------------------------------------
+// UPDATE RESCUE TEAM LIVE LOCATION
+// -----------------------------------------------------
+
+app.put("/api/teams/:id/location", (req, res) => {
+
+    const id = Number(req.params.id);
+
+    const team = liveTeams.find(
+        item => item.id === id
+    );
+
+    if (!team) {
+
+        return res.status(404).json({
+            success: false,
+            message: "Rescue team not found"
+        });
+
+    }
+
+    const {
+        latitude,
+        longitude
+    } = req.body;
+
+    if (latitude === undefined || longitude === undefined) {
+
+        return res.status(400).json({
+            success: false,
+            message: "Latitude and longitude are required"
+        });
+
+    }
+
+    team.latitude = Number(latitude);
+
+    team.longitude = Number(longitude);
+
+    team.lastUpdated = new Date().toISOString();
+
+    res.json({
+
+        success: true,
+
+        message: "Rescue team live location updated successfully",
+
+        data: team
+
+    });
+
+}); 
+
 
 // =====================================================
 // 9. RELIEF & SHELTER MANAGEMENT

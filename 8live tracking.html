@@ -644,11 +644,10 @@ footer {
 
 // API CONNECTION
 
-const API = "/api";
+ const API = "http://localhost:5000/api";
 
 let victims = [];
 let teams = [];
-
 let victimMarkers = [];
 let teamMarkers = [];
 let routeLine = null;
@@ -721,9 +720,8 @@ async function apiRequest(url, options = {}) {
 async function loadDashboard() {
 
     try {
-
-        const data = await apiRequest("/dashboard");
-
+        const response = await apiRequest("/live-dashboard");
+        const data = response.data;
         victims = data.victims;
         teams = data.teams;
 
