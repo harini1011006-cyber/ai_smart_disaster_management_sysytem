@@ -666,35 +666,45 @@ app.post("/api/disaster/prediction", (req, res) => {
 // API: POST /api/monitoring
 // =====================================================
 
+// MODULE 4 - REAL-TIME DISASTER MONITORING
 app.get("/api/monitoring", async (req, res) => {
     try {
-        const latitude = 11.0168;
-        const longitude = 76.9558;
-
         const url =
-            `https://api.open-meteo.com/v1/forecast` +
-            `?latitude=${latitude}` +
-            `&longitude=${longitude}` +
-            `&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m` +
-            `&timezone=Asia%2FKolkata`;
+            "https://api.open-meteo.com/v1/forecast" +
+            "?latitude=11.0168" +
+            "&longitude=76.9558" +
+            "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m" +
+            "&timezone=Asia%2FKolkata";
 
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
 
-        const response = await fetch(url);
+        let response;
 
-        
-if (!response.ok) {
-    const details = await response.text();
-    console.error("Open-Meteo Error:", response.status, details);
-    throw new Error(`Weather API HTTP ${response.status}`);
-}
+        try {
+            response = await fetch(url, {
+                signal: controller.signal
+            });
+        } finally {
+            clearTimeout(timeout);
+        }
 
+        if (!response.ok) {
+            return res.status(502).json({
+                success: false,
+                message: "Weather data temporarily unavailable",
+                error: `Weather API HTTP ${response.status}`
+            });
+        }
 
         const weather = await response.json();
         const current = weather.current;
 
-        const rainfall = Number(current.precipitation) || 0;
+        if (!current) {
+            throw new Error("Weather data is missing");
+        }
+
         const temperature = Number(current.temperature_2m) || 0;
-        const windSpeed = Number(current.wind_speed_10m) || 0;
 
         res.json({
             success: true,
@@ -702,10 +712,10 @@ if (!response.ok) {
             data: {
                 location: "Coimbatore",
                 liveStatus: "Monitoring",
-                rainfall,
                 temperature,
-                windSpeed,
                 humidity: Number(current.relative_humidity_2m) || 0,
+                rainfall: Number(current.precipitation) || 0,
+                windSpeed: Number(current.wind_speed_10m) || 0,
                 fireRisk: temperature >= 40 ? "High" : "Low",
                 lastUpdated: new Date().toISOString()
             }
@@ -715,10 +725,13 @@ if (!response.ok) {
         res.status(502).json({
             success: false,
             message: "Unable to fetch monitoring weather data",
-            error: error.message
+            error: error.name === "AbortError"
+                ? "Weather API timed out"
+                : error.message
         });
     }
 });
+
 
 
 // =====================================================
