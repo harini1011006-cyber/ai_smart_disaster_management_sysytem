@@ -1,216 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart AI-Based Disaster Management</title>
 
-    <title>Smart AI Disaster Management</title>
+<style>
+* {
+    box-sizing: border-box;
+}
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eaf1f5;
+    color: #333;
+}
 
-        body {
-            background: #f4f6f8;
-            color: #222;
-        }
+header {
+    background: #690909;
+    color: white;
+    text-align: center;
+    padding: 20px 10px;
+}
 
-        header {
-            background: #b30000;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+header h1 {
+    margin: 0;
+    font-size: 27px;
+}
 
-        header h1 {
-            font-size: 28px;
-        }
+header p {
+    margin: 8px 0 0;
+    font-size: 14px;
+}
 
-        header p {
-            margin-top: 8px;
-        }
+.container {
+    max-width: 1100px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
 
-        .container {
-            width: 90%;
-            max-width: 1100px;
-            margin: 25px auto;
-        }
+.location {
+    background: #fffbea;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px #0002;
+    margin-bottom: 20px;
+}
 
-        .location {
-            background: white;
-            padding: 18px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 10px #ccc;
-        }
+.location h2 {
+    margin: 0 0 5px;
+    font-size: 23px;
+    color: #543333;
+}
 
-        .location h2 {
-            color: #b30000;
-        }
+.location p {
+    margin: 3px 0;
+}
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 18px;
-        }
+.cards {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+}
 
-        .card {
-            background: white;
-            padding: 22px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 3px 10px #ccc;
-        }
+.card {
+    background: #fffbea;
+    border-radius: 12px;
+    padding: 22px 8px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px #0002;
+    transition: 0.2s;
+    border: 2px solid transparent;
+}
 
-        .card h3 {
-            color: #555;
-            margin-bottom: 12px;
-        }
+.card:hover {
+    transform: translateY(-4px);
+    border-color: #a84a4a;
+}
 
-        .value {
-            font-size: 28px;
-            font-weight: bold;
-            color: #b30000;
-        }
+.card h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+}
 
-        .alert {
-            margin-top: 25px;
-            padding: 25px;
-            background: #ff0000;
-            color: white;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 0 20px #ff4444;
-            animation: blink 1s infinite;
-        }
+.card h2 {
+    color: #702828;
+    margin: 0;
+    font-size: 23px;
+}
 
-        .alert h2 {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
+.hint {
+    text-align: center;
+    color: #666;
+    font-size: 12px;
+    margin: -10px 0 20px;
+}
 
-        .alert p {
-            font-size: 18px;
-        }
+.alert {
+    background: #d90000;
+    color: white;
+    padding: 28px 15px;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 14px #0002;
+    transition: background 0.3s;
+}
 
-        @keyframes blink {
-            50% {
-                opacity: 0.65;
-            }
-        }
+.alert h1 {
+    margin: 0 0 10px;
+    font-size: 27px;
+}
 
-        .status {
-            margin-top: 25px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px #ccc;
-        }
+.alert p {
+    margin: 5px 0;
+}
 
-        .status h2 {
-            color: #b30000;
-            margin-bottom: 15px;
-        }
+.ai-box {
+    background: #fffbea;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px #0002;
+    margin-bottom: 25px;
+}
 
-        #time {
-            font-weight: bold;
-            color: #b30000;
-        }
+.ai-box h2 {
+    margin-top: 0;
+    color: #783030;
+}
 
-        footer {
-            margin-top: 30px;
-            background: #222;
-            color: white;
-            text-align: center;
-            padding: 15px;
-        }
-    </style>
+.ai-box p {
+    line-height: 1.6;
+}
+
+footer {
+    background: #080820;
+    color: white;
+    text-align: center;
+    padding: 18px;
+    font-weight: bold;
+}
+
+.green {
+    background: #168b45;
+}
+
+.orange {
+    background: #ed8500;
+}
+
+.red {
+    background: #d90000;
+}
+
+@media (max-width: 750px) {
+    .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    header h1 {
+        font-size: 21px;
+    }
+}
+
+@media (max-width: 400px) {
+    .cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .card h3 {
+        font-size: 13px;
+    }
+
+    .card h2 {
+        font-size: 19px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <header>
     <h1>🚨 Smart AI-Based Disaster Management</h1>
-    <p>Real-Time Disaster Monitoring & Emergency Response System</p>
+    <p>Real Time Disaster Monitoring &amp; Emergency Response System</p>
 </header>
 
 <div class="container">
 
     <div class="location">
         <h2>📍 Current Location</h2>
-        <p>Cuddalore, Tamil Nadu</p>
-        <p>Live Time: <span id="time"></span></p>
+        <p id="location">Cuddalore, Tamil Nadu</p>
+        <p><b>Live Time:</b> <span id="time"></span></p>
     </div>
 
-    <div class="dashboard">
+    <div class="cards">
 
-        <div class="card">
-            <h3>🌧 Rainfall</h3>
-            <div class="value" id="rainfall">85 mm</div>
+        <div class="card" onclick="changeValue('rainfall')">
+            <h3>🌧️ Rainfall</h3>
+            <h2 id="rainfall">86 mm</h2>
         </div>
 
-        <div class="card">
-            <h3>🌡 Temperature</h3>
-            <div class="value" id="temperature">29 °C</div>
+        <div class="card" onclick="changeValue('temperature')">
+            <h3>🌡️ Temperature</h3>
+            <h2 id="temperature">27 °C</h2>
         </div>
 
-        <div class="card">
+        <div class="card" onclick="changeValue('wind')">
             <h3>💨 Wind Speed</h3>
-            <div class="value" id="wind">65 km/h</div>
+            <h2 id="wind">60 km/h</h2>
         </div>
 
-        <div class="card">
+        <div class="card" onclick="changeValue('water')">
             <h3>💧 Water Level</h3>
-            <div class="value" id="water">82 %</div>
+            <h2 id="water">85 %</h2>
         </div>
 
-        <div class="card">
-            <h3>🌍 Earthquake</h3>
-            <div class="value">Normal</div>
+        <div class="card" onclick="changeValue('earthquake')">
+            <h3>🌎 Earthquake</h3>
+            <h2 id="earthquake">Normal</h2>
         </div>
 
-        <div class="card">
+        <div class="card" onclick="changeValue('fire')">
             <h3>🔥 Fire Risk</h3>
-            <div class="value">Low</div>
+            <h2 id="fire">Low</h2>
         </div>
 
     </div>
 
-    <!-- RED ALERT -->
+    <p class="hint">Click any weather or risk card to change its demo value.</p>
 
-    <div class="alert">
-        <h2>🚨 RED ALERT</h2>
-        <p>HIGH DISASTER RISK DETECTED</p>
-        <p>Immediate emergency response is required.</p>
+    <div class="alert red" id="alert">
+        <h1 id="alertTitle">🚨 RED ALERT</h1>
+        <p id="alertMessage"><b>HIGH DISASTER RISK DETECTED</b></p>
+        <p id="alertSub">Immediate emergency response is required.</p>
     </div>
 
-    <div class="status">
+    <div class="ai-box">
         <h2>🤖 AI Analysis</h2>
 
-        <p>
-            AI system is analyzing rainfall, wind speed,
-            water level and disaster-related data.
-        </p>
+        <p>AI system is analyzing rainfall, wind speed, water level and disaster-related data.</p>
 
-        <br>
-
-        <p>
-            <b>Risk Detection:</b>
-            <span style="color:red;">
+        <p><b>Risk Detection:</b>
+            <span id="riskText" style="color:red;font-weight:bold;">
                 HIGH RISK
             </span>
         </p>
 
-        <br>
-
-        <p>
-            <b>Recommended Action:</b>
-            Evacuate people from high-risk areas and
-            activate emergency response teams.
+        <p><b>Recommended Action:</b>
+            <span id="action">
+                Evacuate people from high-risk areas and activate emergency response teams.
+            </span>
         </p>
     </div>
 
@@ -220,48 +264,134 @@
     Smart AI Disaster Management System © 2026
 </footer>
 
-
 <script>
+const data = {
+    rainfall: 86,
+    temperature: 27,
+    wind: 60,
+    water: 85,
+    earthquake: 0,
+    fire: 0
+};
 
-    // REAL-TIME CLOCK
+const values = {
+    rainfall: [10, 35, 60, 86, 120],
+    temperature: [20, 25, 27, 32, 40],
+    wind: [10, 25, 40, 60, 100],
+    water: [20, 40, 60, 85, 95],
+    earthquake: [0, 1, 2],
+    fire: [0, 1, 2]
+};
 
-    function updateTime() {
+function changeValue(type) {
+    const list = values[type];
+    const currentIndex = list.indexOf(data[type]);
+    data[type] = list[(currentIndex + 1) % list.length];
 
-        let now = new Date();
-
-        let time = now.toLocaleTimeString();
-
-        document.getElementById("time").innerText = time;
+    if (type === "rainfall") {
+        document.getElementById("rainfall").textContent =
+            data.rainfall + " mm";
     }
 
-    setInterval(updateTime, 1000);
+    if (type === "temperature") {
+        document.getElementById("temperature").textContent =
+            data.temperature + " °C";
+    }
 
-    updateTime();
+    if (type === "wind") {
+        document.getElementById("wind").textContent =
+            data.wind + " km/h";
+    }
 
+    if (type === "water") {
+        document.getElementById("water").textContent =
+            data.water + " %";
+    }
 
-    // SIMULATED REAL-TIME SENSOR DATA
+    if (type === "earthquake") {
+        document.getElementById("earthquake").textContent =
+            ["Normal", "Moderate", "High"][data.earthquake];
+    }
 
-    setInterval(function() {
+    if (type === "fire") {
+        document.getElementById("fire").textContent =
+            ["Low", "Medium", "High"][data.fire];
+    }
 
-        let rainfall = Math.floor(Math.random() * 30) + 70;
-        let temperature = Math.floor(Math.random() * 5) + 27;
-        let wind = Math.floor(Math.random() * 20) + 55;
-        let water = Math.floor(Math.random() * 15) + 75;
+    updateRisk();
+}
 
-        document.getElementById("rainfall").innerText =
-            rainfall + " mm";
+function updateRisk() {
+    let score = 0;
 
-        document.getElementById("temperature").innerText =
-            temperature + " °C";
+    if (data.rainfall >= 100) score += 2;
+    else if (data.rainfall >= 60) score += 1;
 
-        document.getElementById("wind").innerText =
-            wind + " km/h";
+    if (data.temperature >= 38) score += 2;
+    else if (data.temperature >= 32) score += 1;
 
-        document.getElementById("water").innerText =
-            water + " %";
+    if (data.wind >= 80) score += 2;
+    else if (data.wind >= 50) score += 1;
 
-    }, 3000);
+    if (data.water >= 90) score += 2;
+    else if (data.water >= 75) score += 1;
 
+    if (data.earthquake === 2) score += 3;
+    else if (data.earthquake === 1) score += 1;
+
+    if (data.fire === 2) score += 2;
+    else if (data.fire === 1) score += 1;
+
+    let level, color, message, sub, action;
+
+    if (score >= 6) {
+        level = "HIGH RISK";
+        color = "red";
+        message = "HIGH DISASTER RISK DETECTED";
+        sub = "Immediate emergency response is required.";
+        action = "Follow official emergency instructions, move away from danger zones and alert local emergency services.";
+    } else if (score >= 3) {
+        level = "MODERATE RISK";
+        color = "orange";
+        message = "MODERATE DISASTER RISK DETECTED";
+        sub = "Stay alert and prepare for possible emergencies.";
+        action = "Monitor official weather alerts, prepare emergency supplies and identify a safe shelter.";
+    } else {
+        level = "LOW RISK";
+        color = "green";
+        message = "LOW DISASTER RISK";
+        sub = "Conditions are within the demo's low-risk range.";
+        action = "Continue monitoring conditions and follow local authority guidance.";
+    }
+
+    const alert = document.getElementById("alert");
+    alert.className = "alert " + color;
+
+    document.getElementById("alertTitle").textContent =
+        color === "red" ? "🚨 RED ALERT" :
+        color === "orange" ? "⚠️ ORANGE ALERT" :
+        "✅ GREEN ALERT";
+
+    document.getElementById("alertMessage").textContent = message;
+    document.getElementById("alertSub").textContent = sub;
+
+    const riskText = document.getElementById("riskText");
+    riskText.textContent = level;
+    riskText.style.color =
+        color === "red" ? "#d90000" :
+        color === "orange" ? "#ed8500" : "#168b45";
+
+    document.getElementById("action").textContent = action;
+}
+
+function updateTime() {
+    document.getElementById("time").textContent =
+        new Date().toLocaleTimeString("en-IN");
+}
+
+updateTime();
+setInterval(updateTime, 1000);
+updateRisk();
 </script>
 
 </body>

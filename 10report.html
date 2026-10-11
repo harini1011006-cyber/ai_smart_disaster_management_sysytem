@@ -857,63 +857,259 @@ footer{
 
 
 <script>
+const API = "http://localhost:5000/api";
+
+/* CREATE REPORT DISPLAY */
+function showReport(title, message, records = null) {
+    let panel = document.getElementById("reportOutput");
+
+    if (!panel) {
+        panel = document.createElement("section");
+        panel.id = "reportOutput";
+        panel.className = "report-section";
+
+        const filters = document.querySelector(".filters");
+        filters.insertAdjacentElement("afterend", panel);
+    }
+
+    panel.replaceChildren();
+
+    const heading = document.createElement("h2");
+    heading.textContent = title;
+    panel.appendChild(heading);
+
+    const info = document.createElement("p");
+    info.textContent = message;
+    info.style.marginBottom = "15px";
+    panel.appendChild(info);
+
+    if (records === null) {
+        panel.scrollIntoView({ behavior: "smooth" });
+        return;
+    }
+
+    if (records.length === 0) {
+        const empty = document.createElement("p");
+        empty.textContent = "No records found in the database.";
+        panel.appendChild(empty);
+        panel.scrollIntoView({ behavior: "smooth" });
+        return;
+    }
+
+    const table = document.createElement("table");
+    const header = document.createElement("tr");
+    const body = document.createElement("tbody");
+
+    const keys = [...new Set(
+        records.flatMap(record => Object.keys(record))
+    )].filter(key => key !== "__v");
+
+    keys.forEach(key => {
+        const th = document.createElement("th");
+        th.textContent = key;
+        header.appendChild(th);
+    });
+
+    const thead = document.createElement("thead");
+    thead.appendChild(header);
+
+    records.forEach(record => {
+        const row = document.createElement("tr");
+
+        keys.forEach(key => {
+            const td = document.createElement("td");
+            const value = record[key];
+
+            td.textContent = value == null
+                ? "-"
+                : typeof value === "object"
+                    ? JSON.stringify(value)
+                    : String(value);
+
+            row.appendChild(td);
+        });
+
+        body.appendChild(row);
+    });
+
+    table.append(thead, body);
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "table-container";
+    wrapper.appendChild(table);
+    panel.appendChild(wrapper);
+
+    panel.scrollIntoView({ behavior: "smooth" });
+}
+
+/* LOAD DATABASE RECORDS AND SAVE REPORT */
+async function loadRecords(title, routes, filterType = false) {
+    showReport(title, "Loading records from database...");
+
+    for (const route of routes) {
+        try {
+            const response = await fetch(API + route);
+
+            if (!response.ok) {
+                console.log("API failed:", route, response.status);
+                continue;
+            }
+
+            const result = await response.json();
+
+            let records = Array.isArray(result)
+                ? result
+                : Array.isArray(result.data)
+                    ? result.data
+                    : null;
+
+            if (records === null && result.success === true) {
+                records = [];
+            }
+
+            if (records === null) continue;
+
+            if (filterType) {
+                const selected = document.querySelectorAll(
+                    ".filters select"
+                )[1].value;
+
+                if (selected !== "All Disaster Types") {
+                    records = records.filter(item => {
+                        const type = String(
+                            item.disasterType ||
+                            item.disaster ||
+                            item.type ||
+                            ""
+                        ).toLowerCase();
+
+                        return type === selected.toLowerCase();
+                    });
+                }
+            }
+
+            // Save report to MongoDB
+            const saveResponse = await fetch(API + "/reports", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: title,
+                    reportType: title,
+                    data: records
+                })
+            });
+
+            if (!saveResponse.ok) {
+                console.error(
+                    "Report save failed:",
+                    await saveResponse.text()
+                );
+            } else {
+                console.log("Report saved to MongoDB");
+            }
+
+            showReport(
+                title,
+                "Database records found: " + records.length,
+                records
+            );
+
+            return;
+
+        } catch (error) {
+            console.log(route, error.message);
+        }
+    }
+
+    showReport(
+        title,
+        "Unable to retrieve data. Check the API route in backend/server.js."
+    );
+}
+
 
 /* EMERGENCY */
-function emergencyAlert(){
-
-    alert(
-        "🚨 EMERGENCY ALERT\n\n" +
-        "Critical disaster incidents are currently being monitored.\n" +
-        "Rescue and relief teams have been notified."
+function emergencyAlert() {
+    showReport(
+        "Emergency Status",
+        "For a real emergency, contact local emergency services."
     );
-
 }
 
+/* GENERATE ANALYSIS REPORT */
+async function generateReport() {
+    const period = document.getElementById("timeFilter").value;
+    const date = document.querySelector(
+        '.filters input[type="date"]'
+    ).value;
 
-/* GENERATE REPORT */
-function generateReport(){
-
-    let period =
-        document.getElementById("timeFilter").value;
-
-    alert(
-        "📄 Report Generated Successfully!\n\n" +
-        "Report Period: " + period.toUpperCase() +
-        "\n\n" +
-        "The analytics report is ready for review."
+    await loadRecords(
+        "📊 Analysis Report",
+        ["/disasters", "/alerts", "/reports"],
+        true
     );
 
+    const panel = document.getElementById("reportOutput");
+
+    if (panel) {
+        const details = document.createElement("p");
+        details.textContent =
+            "Selected period: " + period.toUpperCase() +
+            " | Selected date: " + (date || "Not selected") +
+            " | Disaster type: " +
+            document.querySelectorAll(".filters select")[1].value;
+
+        panel.insertBefore(details, panel.children[1] || null);
+    }
 }
 
+/* SIX AVAILABLE REPORTS */
+function viewReport(reportName) {
+    const reportRoutes = {
+        "Disaster Report": [
+            "/disasters",
+            "/alerts"
+        ],
+        "Rescue Report": [
+            "/rescue-teams",
+            "/live-dashboard"
+        ],
+        "Shelter Report": [
+            "/shelters"
+        ],
+        "Relief Report": [
+            "/relief-resources"
+        ],
+        "SOS Report": [
+            "/sos"
+        ],
+        "AI Prediction Report": [
+            "/predictions",
+            "/disaster-predictions",
+            "/prediction"
+        ]
+    };
 
-/* VIEW REPORT */
-function viewReport(reportName){
-
-    alert(
-        "📊 " + reportName + "\n\n" +
-        "Report opened successfully.\n\n" +
-        "Detailed analytics, statistics and emergency data " +
-        "will be displayed here."
+    loadRecords(
+        "📑 " + reportName,
+        reportRoutes[reportName] || ["/reports"]
     );
-
 }
-
 
 /* FILTER UPDATE */
-function updateReport(){
-
-    let period =
-        document.getElementById("timeFilter").value;
-
-    alert(
-        "Analytics Updated\n\n" +
-        "Showing data for: " +
-        period.toUpperCase()
+function updateReport() {
+    showReport(
+        "Analysis Filters",
+        "Selected period: " +
+        document.getElementById("timeFilter").value.toUpperCase() +
+        ". Click Generate Report to view records."
     );
-
 }
-
 </script>
+
+
 
 </body>
 </html>

@@ -229,7 +229,7 @@ label{font-weight:bold}
 </div>
 
 <script>
-let API_URL = "http://localhost:5000/api/disaster-data";
+let API_URL = "http://localhost:5000/api/monitoring";
 let latestData = null;
 
 function showPage(id,element){
@@ -260,7 +260,7 @@ function updateDashboard(data){
  const rainfall=Number(value(data,["rainfall"],0));
  const temperature=Number(value(data,["temperature"],0));
  const wind=Number(value(data,["windSpeed","wind"],0));
- const water=Number(value(data,["waterLevel"],0));
+ const water=value(data,["waterLevel"],null);
  const location=value(data,["location"],"Unknown");
  const level=value(data,["riskLevel"],riskLevel(Math.max(rainfall,wind,water)));
 
@@ -277,17 +277,16 @@ function updateDashboard(data){
  document.getElementById("rain").innerText=rainfall;
  document.getElementById("temp").innerText=temperature;
  document.getElementById("wind").innerText=wind;
- document.getElementById("water").innerText=water;
+ document.getElementById("water").innerText=water===null?"Not measured":water;
  document.getElementById("location").innerText=location;
 
  document.getElementById("pRain").innerText=rainfall;
  document.getElementById("pWind").innerText=wind;
- document.getElementById("pWater").innerText=water;
-
+document.getElementById("pWater").innerText=water===null?"Not measured":water;
+document.getElementById("floodRisk").innerText=water===null?"No data":riskLevel(water);
  document.getElementById("overall").innerText=level;
- document.getElementById("floodRisk").innerText=riskLevel(water);
- document.getElementById("pFlood").innerText=riskLevel(water);
  document.getElementById("cyclone").innerText=riskLevel(wind);
+ document.getElementById("pFlood").innerText=water===null?"No data":riskLevel(water);
  document.getElementById("pCyclone").innerText=riskLevel(wind);
 
  const status=document.getElementById("statusList");
@@ -322,34 +321,37 @@ function updateDashboard(data){
 
  document.getElementById("connection").innerHTML=
  "🟢 Backend connected successfully. Data received from API.";
- document.getElementById("serverTime").innerText=new Date().toLocaleTimeString();
 }
 
-function showDemo(){
- const demo={
-  location:"Cuddalore, Tamil Nadu (Demo)",
-  rainfall:85,
-  temperature:29,
-  windSpeed:65,
-  waterLevel:82,
-  riskLevel:"HIGH"
- };
- updateDashboard(demo);
- document.getElementById("connection").innerHTML=
- "🟠 Backend not connected. Showing DEMO data only.";
-}
 
-async function loadData(){
- try{
-  const response=await fetch(API_URL);
-  if(!response.ok) throw new Error("API error: "+response.status);
-  const data=await response.json();
-  updateDashboard(data);
- }catch(error){
-  document.getElementById("connection").innerHTML=
-  "🔴 Backend connection failed. Check server and API URL.";
-  console.log(error);
- }
+async function loadData() {
+    try {
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+            throw new Error("API error: " + response.status);
+        }
+
+        const result = await response.json();
+
+        if (result.success === false) {
+            throw new Error(result.message || "API failed");
+        }
+
+        const data = result.data || result;
+        updateDashboard(data);
+
+    } catch (error) {
+        document.getElementById("connection").innerText =
+            "Backend connection failed: " + error.message;
+
+        document.getElementById("location").innerText = "Unavailable";
+        document.getElementById("rain").innerText = "--";
+        document.getElementById("temp").innerText = "--";
+        document.getElementById("wind").innerText = "--";
+
+        console.error(error);
+    }
 }
 
 function saveSettings(){

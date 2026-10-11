@@ -1272,30 +1272,63 @@ document.getElementById("currentDate").textContent =
    SOS
 ========================================================= */
 
-function sendSOS() {
 
-    const confirmed =
-        confirm(
-            "🚨 EMERGENCY SOS\n\n" +
-            "Are you sure you want to send an emergency alert?"
-        );
+/* =========================================================
+   SOS — SAVE TO MONGODB
+========================================================= */
+
+async function sendSOS() {
+
+    const confirmed = confirm(
+        "EMERGENCY SOS\n\n" +
+        "Are you sure you want to send an emergency alert?"
+    );
 
     if (!confirmed) return;
 
-    const active =
-        document.getElementById("activeSOS");
+    try {
 
-    let count =
-        parseInt(active.textContent);
+        const response = await fetch(
+            "http://localhost:5000/api/sos",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: "SOS Victim",
+                    phone: "",
+                    location: "Unknown",
+                    emergencyType: "General Emergency",
+                    description: "SOS sent from SOS & Victim Management",
+                    status: "Pending"
+                })
+            }
+        );
 
-    count++;
+        const result = await response.json();
 
-    active.textContent =
-        String(count).padStart(2, "0");
+        if (!response.ok || result.success === false) {
+            throw new Error(
+                result.message || "SOS could not be saved"
+            );
+        }
 
-    showToast(
-        "🚨 SOS ALERT SENT — Response team notified!"
-    );
+        const active = document.getElementById("activeSOS");
+
+        let count = parseInt(active.textContent, 10) || 0;
+
+        active.textContent =
+            String(count + 1).padStart(2, "0");
+
+        showToast("SOS saved to database successfully!");
+
+    } catch (error) {
+
+        console.error("SOS Save Error:", error);
+
+        showToast("SOS save failed: " + error.message);
+    }
 }
 
 

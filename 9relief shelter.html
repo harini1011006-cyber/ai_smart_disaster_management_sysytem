@@ -253,13 +253,32 @@
             gap: 18px;
         }
 
-        .relief-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
-            text-align: center;
-        }
+.relief-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.relief-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.resource-result {
+    display: none;
+    background: #fff0f0;
+    border-left: 5px solid #c40000;
+    padding: 18px;
+    margin-top: 18px;
+    border-radius: 8px;
+    line-height: 1.8;
+}
+
+       
 
         .relief-icon {
             font-size: 32px;
@@ -629,40 +648,42 @@
 
         </section>
 
-        <!-- RELIEF RESOURCES -->
-        <section class="relief-section">
+<!-- RELIEF RESOURCES -->
+<section class="relief-section">
+    <h2 class="section-title">📦 Relief Resources</h2>
 
-            <h2 class="section-title">📦 Relief Resources</h2>
+    <div class="relief-grid">
 
-            <div class="relief-grid">
+        <div class="relief-card" onclick="showResource('Food')">
+            <div class="relief-icon">🍚</div>
+            <h3>Food</h3>
+            <p>Click to view food relief details.</p>
+        </div>
 
-                <div class="relief-card">
-                    <div class="relief-icon">🍚</div>
-                    <h3>Food</h3>
-                    <p>Daily food packets available for affected people.</p>
-                </div>
+        <div class="relief-card" onclick="showResource('Drinking Water')">
+            <div class="relief-icon">💧</div>
+            <h3>Drinking Water</h3>
+            <p>Click to view drinking water details.</p>
+        </div>
 
-                <div class="relief-card">
-                    <div class="relief-icon">💧</div>
-                    <h3>Drinking Water</h3>
-                    <p>Safe drinking water available at shelters.</p>
-                </div>
+        <div class="relief-card" onclick="showResource('Medical Support')">
+            <div class="relief-icon">🩺</div>
+            <h3>Medical Support</h3>
+            <p>Click to view medical support details.</p>
+        </div>
 
-                <div class="relief-card">
-                    <div class="relief-icon">🩺</div>
-                    <h3>Medical Support</h3>
-                    <p>First aid and emergency medical assistance.</p>
-                </div>
+        <div class="relief-card" onclick="showResource('Relief Kits')">
+            <div class="relief-icon">🧺</div>
+            <h3>Relief Kits</h3>
+            <p>Click to view relief kit details.</p>
+        </div>
 
-                <div class="relief-card">
-                    <div class="relief-icon">🧺</div>
-                    <h3>Relief Kits</h3>
-                    <p>Essential clothing, blankets and hygiene kits.</p>
-                </div>
+    </div>
 
-            </div>
+    <div id="resourceResult" class="resource-result"></div>
+</section>
 
-        </section>
+        
 
     </main>
 
@@ -721,6 +742,45 @@
                 "Contact the emergency rescue team if immediate assistance is required."
             );
         }
+
+/* RELIEF RESOURCE DETAILS */
+function showResource(resourceName) {
+
+    const resourceDetails = {
+        "Food": {
+            quantity: "Quantity not yet recorded",
+            description: "Food packets for affected people."
+        },
+        "Drinking Water": {
+            quantity: "Quantity not yet recorded",
+            description: "Safe drinking water for affected people."
+        },
+        "Medical Support": {
+            quantity: "Quantity not yet recorded",
+            description: "First aid and emergency medical assistance."
+        },
+        "Relief Kits": {
+            quantity: "Quantity not yet recorded",
+            description: "Clothing, blankets and hygiene supplies."
+        }
+    };
+
+    const item = resourceDetails[resourceName];
+    const result = document.getElementById("resourceResult");
+
+    result.innerHTML = `
+        <h3>${resourceName}</h3>
+        <p><strong>Available quantity:</strong> ${item.quantity}</p>
+        <p><strong>Details:</strong> ${item.description}</p>
+    `;
+
+    result.style.display = "block";
+
+    result.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+}
 
 
         /* SHELTER DETAILS */

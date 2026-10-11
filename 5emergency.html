@@ -712,9 +712,11 @@ footer {
 }
 
 </style>
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 </head>
-
-
 <body>
 
 <!-- =========================
@@ -943,7 +945,6 @@ footer {
             </div>
 
 
-
             <div class="stat-card">
 
                 <div class="stat-top">
@@ -965,8 +966,6 @@ footer {
                 </div>
 
             </div>
-
-
 
             <div class="stat-card">
 
@@ -1028,310 +1027,104 @@ footer {
             <div>
 
 
-                <!-- DISASTER GRAPH -->
-
-                <div class="card">
-
-                    <div class="card-title">
-
-                        <h3>
-                            📊 Disaster Overview
-                        </h3>
-
-                        <span class="view">
-                            Last 7 days ▾
-                        </span>
-
-                    </div>
-
-
-                    <div class="chart">
-
-
-                        <div>
-
-                            <div class="chart-column">
-
-                                <div
-                                    class="bar red"
-                                    style="height:75%"
-                                ></div>
-
-                                <div
-                                    class="bar orange"
-                                    style="height:50%"
-                                ></div>
-
-                                <div
-                                    class="bar green"
-                                    style="height:60%"
-                                ></div>
-
-                                <div
-                                    class="bar blue"
-                                    style="height:40%"
-                                ></div>
-
-                            </div>
-
-                            <div class="chart-day">Mon</div>
-
-                        </div>
-
-
-
-                        <div>
-
-                            <div class="chart-column">
-
-                                <div
-                                    class="bar red"
-                                    style="height:72%"
-                                ></div>
-
-                                <div
-                                    class="bar orange"
-                                    style="height:55%"
-                                ></div>
-
-                                <div
-                                    class="bar green"
-                                    style="height:65%"
-                                ></div>
-
-                                <div
-                                    class="bar blue"
-                                    style="height:42%"
-                                ></div>
-
-                            </div>
-
-                            <div class="chart-day">Tue</div>
-
-                        </div>
-
-
-
-                        <div>
-
-                            <div class="chart-column">
-
-                                <div
-                                    class="bar red"
-                                    style="height:67%"
-                                ></div>
-
-                                <div
-                                    class="bar orange"
-                                    style="height:52%"
-                                ></div>
-
-                                <div
-                                    class="bar green"
-                                    style="height:58%"
-                                ></div>
-
-                                <div
-                                    class="bar blue"
-                                    style="height:38%"
-                                ></div>
-
-                            </div>
-
-                            <div class="chart-day">Wed</div>
-
-                        </div>
-
-
-
-                        <div>
-
-                            <div class="chart-column">
-
-                                <div
-                                    class="bar red"
-                                    style="height:63%"
-                                ></div>
-
-                                <div
-                                    class="bar orange"
-                                    style="height:47%"
-                                ></div>
-
-                                <div
-                                    class="bar green"
-                                    style="height:55%"
-                                ></div>
-
-                                <div
-                                    class="bar blue"
-                                    style="height:35%"
-                                ></div>
-
-                            </div>
-
-                            <div class="chart-day">Thu</div>
-
-                        </div>
-
-
-
-                        <div>
-
-                            <div class="chart-column">
-
-                                <div
-                                    class="bar red"
-                                    style="height:60%"
-                                ></div>
-
-                                <div
-                                    class="bar orange"
-                                    style="height:45%"
-                                ></div>
-
-                                <div
-                                    class="bar green"
-                                    style="height:52%"
-                                ></div>
-
-                                <div
-                                    class="bar blue"
-                                    style="height:33%"
-                                ></div>
-
-                            </div>
-
-                            <div class="chart-day">Fri</div>
-
-                        </div>
-
-
-
-                        <div>
-
-                            <div class="chart-column">
-
-                                <div
-                                    class="bar red"
-                                    style="height:65%"
-                                ></div>
-
-                                <div
-                                    class="bar orange"
-                                    style="height:48%"
-                                ></div>
-
-                                <div
-                                    class="bar green"
-                                    style="height:57%"
-                                ></div>
-
-                                <div
-                                    class="bar blue"
-                                    style="height:36%"
-                                ></div>
-
-                            </div>
-
-                            <div class="chart-day">Sat</div>
-
-                        </div>
-
-
-
-                        <div>
-
-                            <div class="chart-column">
-
-                                <div
-                                    class="bar red"
-                                    style="height:80%"
-                                ></div>
-
-                                <div
-                                    class="bar orange"
-                                    style="height:60%"
-                                ></div>
-
-                                <div
-                                    class="bar green"
-                                    style="height:68%"
-                                ></div>
-
-                                <div
-                                    class="bar blue"
-                                    style="height:43%"
-                                ></div>
-
-                            </div>
-
-                            <div class="chart-day">Sun</div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- SOS REQUEST -->
-
-                <div class="card">
-
-                    <div class="card-title">
-
-                        <h3>👥 Recent SOS Requests</h3>
-
-                        <span class="view">
-                            View All →
-                        </span>
-
-                    </div>
-
-
-                    <div class="sos-row">
-
-                        <strong>User</strong>
-                        <strong>Location</strong>
-                        <strong>Type</strong>
-                        <strong>Status</strong>
-
-                    </div>
-
-
-                    <div class="sos-row">
-
-                        <span>👤 User 01</span>
-                        <span>Chennai</span>
-                        <span>Medical Help</span>
-
-                        <span class="status-progress">
-                            In Progress
-                        </span>
-
-                    </div>
-
-
-                    <div class="sos-row">
-
-                        <span>👤 User 02</span>
-                        <span>Nagapattinam</span>
-                        <span>Rescue</span>
-
-                        <span class="status-assigned">
-                            Assigned
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
+                
+<!-- DISASTER GRAPH -->
+<div class="card">
+    <div class="card-title">
+        <h3>📊 Disaster Overview</h3>
+        <span class="view">Last 7 days</span>
+    </div>
+
+    <p id="graphStatus">Loading real database data...</p>
+
+    <div id="realDisasterGraph" class="chart"></div>
+</div>
+
+<script>
+async function loadDisasterGraph() {
+    const graph = document.getElementById("realDisasterGraph");
+    const status = document.getElementById("graphStatus");
+
+    try {
+        const response = await fetch("http://localhost:5000/api/reports/summary");
+        if (!response.ok) throw new Error("API error " + response.status);
+
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(result.message || "Could not load reports");
+        }
+        const responseData = result.data?.data ?? result.data;
+        const rows = responseData?.last7Days;
+
+        if (!Array.isArray(rows)) {
+            throw new Error("last7Days data is missing from backend");
+        }
+
+        graph.innerHTML = "";
+        graph.style.cssText =
+            "display:flex;align-items:flex-end;justify-content:space-around;gap:8px;height:250px;padding:15px 5px;";
+
+        const maxCount = Math.max(
+            1,
+            ...rows.map(day =>
+                (Number(day.sos) || 0) + (Number(day.alerts) || 0)
+            )
+        );
+
+        rows.forEach(day => {
+            const sos = Number(day.sos) || 0;
+            const alerts = Number(day.alerts) || 0;
+
+            const column = document.createElement("div");
+            column.style.cssText =
+                "display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:1;height:100%;gap:4px;";
+
+            const total = document.createElement("small");
+            total.textContent = sos + alerts;
+            total.title = "SOS: " + sos + ", Alerts: " + alerts;
+
+            const bars = document.createElement("div");
+            bars.style.cssText =
+                "display:flex;align-items:flex-end;gap:3px;height:180px;";
+
+            const sosBar = document.createElement("div");
+            sosBar.style.cssText =
+                "width:12px;background:#c00000;border-radius:4px 4px 0 0;height:" +
+                Math.max(sos ? 4 : 0, sos / maxCount * 170) + "px;";
+            sosBar.title = "SOS: " + sos;
+
+            const alertBar = document.createElement("div");
+            alertBar.style.cssText =
+                "width:12px;background:#f39c12;border-radius:4px 4px 0 0;height:" +
+                Math.max(alerts ? 4 : 0, alerts / maxCount * 170) + "px;";
+            alertBar.title = "Alerts: " + alerts;
+
+            bars.append(sosBar, alertBar);
+
+            const label = document.createElement("small");
+            label.textContent = day.date.slice(5);
+            label.title = day.date;
+
+            column.append(total, bars, label);
+            graph.appendChild(column);
+        });
+
+        status.textContent =
+            "Real MongoDB data: Red = SOS, Orange = Alerts";
+
+    } catch (error) {
+        graph.innerHTML = "";
+        status.textContent = "Graph data unavailable: " + error.message;
+    }
+}
+
+loadDisasterGraph();
+</script>
+
+
+
+                
             <!-- COLUMN 2 -->
 
             <div>
@@ -1353,23 +1146,27 @@ footer {
 
 
                     <div class="map-box">
+<div id="disasterMap"
+     style="height:320px; width:100%; border-radius:12px; overflow:hidden;">
+</div>
 
-                        <div class="map-pin pin1">
-                            📍
-                        </div>
-
-                        <div class="map-pin pin2">
-                            📍
-                        </div>
-
-                        <div class="map-pin pin3">
-                            📍
-                        </div>
-
-                    </div>
+<p id="mapStatus">Loading real database locations...</p>
+                       
 
                 </div>
 
+
+<!-- RECENT SOS REQUESTS -->
+<div class="card">
+    <div class="card-title">
+        <h3>🆘 Recent SOS Requests</h3>
+        <span class="view">Saved Records</span>
+    </div>
+
+    <div id="sosRequestsList">
+        Loading SOS requests...
+    </div>
+</div>
 
 
                 <!-- RESOURCES -->
@@ -1379,10 +1176,7 @@ footer {
                     <div class="card-title">
 
                         <h3>📦 Resources Availability</h3>
-
-                        <span class="view">
-                            View All →
-                        </span>
+                        <button type="button" class="view" onclick="viewResources()">View All →</button>
 
                     </div>
 
@@ -1632,6 +1426,10 @@ footer {
                             <p>View Map</p>
 
                         </button>
+    <button class="quick-btn" onclick="findAmbulance()">
+    <div class="q-icon">🚑</div>
+    <p>Find Ambulance</p>
+</button>                    
 
                     </div>
 
@@ -1691,59 +1489,231 @@ footer {
      JAVASCRIPT
 ========================= -->
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
 
-function sendSOS() {
+async function loadSOSRequests() {
+    const list = document.getElementById("sosRequestsList");
+    if (!list) return;
 
-    let confirmSOS = confirm(
-        "🚨 EMERGENCY SOS\n\n" +
-        "Do you need immediate emergency assistance?"
+    try {
+        const response = await fetch("http://localhost:5000/api/sos");
+
+        if (!response.ok) {
+            throw new Error("Failed to load SOS records");
+        }
+
+        const result = await response.json();
+        const requests = result.data || [];
+
+        list.innerHTML = "";
+
+        if (requests.length === 0) {
+            list.textContent = "No SOS requests yet.";
+            return;
+        }
+
+        requests.forEach(item => {
+            const row = document.createElement("div");
+
+            row.style.cssText =
+                "padding:10px;margin:8px 0;" +
+                "background:#fff1f1;" +
+                "border-left:4px solid red;" +
+                "border-radius:6px;";
+
+            row.textContent =
+                "Name: " + (item.name || "N/A") +
+                " | Phone: " + (item.phone || "N/A") +
+                " | Location: " + (item.location || "N/A") +
+                " | Emergency: " + (item.emergencyType || "N/A") +
+                " | Status: " + (item.status || "Pending");
+
+            list.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error("SOS loading error:", error);
+        list.textContent = "Unable to load SOS records.";
+    }
+}
+
+async function sendSOS() {
+    const name = prompt("Enter your name:");
+    if (!name || !name.trim()) return;
+
+    const phone = prompt("Enter your phone number:");
+    if (!phone || !phone.trim()) return;
+
+    const location = prompt("Enter your location:");
+    if (!location || !location.trim()) return;
+
+    const emergencyType = prompt(
+        "Enter emergency type (Medical Help / Rescue / Flood / Other):"
     );
+    if (!emergencyType || !emergencyType.trim()) return;
 
-    if (confirmSOS) {
+    try {
+        const response = await fetch("http://localhost:5000/api/sos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name.trim(),
+                phone: phone.trim(),
+                location: location.trim(),
+                emergencyType: emergencyType.trim(),
+                description: "SOS sent from Emergency module"
+            })
+        });
 
-        alert(
-            "✅ SOS REQUEST SENT!\n\n" +
-            "Your emergency request has been recorded.\n" +
-            "Rescue team will be notified."
+        const result = await response.json();
+
+        if (!response.ok || result.success === false) {
+            throw new Error(result.message || "SOS could not be saved");
+        }
+
+        alert("SOS saved successfully in the database!");
+        await loadSOSRequests();
+    } catch (error) {
+        alert("SOS failed: " + error.message);
+    }
+}
+
+async function reportEmergency() {
+    const title = prompt("Enter emergency alert title:");
+    if (!title || !title.trim()) return;
+
+    const message = prompt("Enter emergency details:");
+    if (!message || !message.trim()) return;
+
+    const location = prompt("Enter emergency location:");
+    if (!location || !location.trim()) return;
+
+    const severity = prompt("Enter severity: High / Medium / Low", "High");
+    if (!severity || !severity.trim()) return;
+
+    try {
+        const response = await fetch("http://localhost:5000/api/alerts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: title.trim(),
+                message: message.trim(),
+                type: "Emergency",
+                location: location.trim(),
+                severity: severity.trim()
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || result.error || "Alert save failed");
+        }
+
+        alert("Emergency alert saved successfully in MongoDB!");
+    } catch (error) {
+        console.error("Emergency alert error:", error);
+        alert("Alert save failed: " + error.message);
+    }
+}
+
+async function findShelter() {
+    try {
+        const response = await fetch(
+            "http://localhost:5000/api/shelters"
         );
 
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Could not load shelters");
+        }
+
+        if (!result.data || result.data.length === 0) {
+            alert("No shelters found in the database.");
+            return;
+        }
+
+        const shelterDetails = result.data.map((shelter, index) =>
+            `${index + 1}. ${shelter.name}\n` +
+            `Location: ${shelter.location}\n` +
+            `Capacity: ${shelter.capacity}\n` +
+            `Available beds: ${shelter.availableBeds}\n` +
+            `Status: ${shelter.status}`
+        ).join("\n\n");
+
+        alert("AVAILABLE SHELTERS\n\n" + shelterDetails);
+
+    } catch (error) {
+        alert("Shelter loading failed: " + error.message);
     }
-
 }
-
-
-function reportEmergency() {
-
-    alert(
-        "⚠️ REPORT EMERGENCY\n\n" +
-        "Emergency reporting module will open here."
-    );
-
-}
-
-
-function findShelter() {
-
-    alert(
-        "🏠 FIND SHELTER\n\n" +
-        "Nearby emergency shelters will be displayed here."
-    );
-
-}
-
 
 function viewMap() {
+    const mapElement = document.getElementById("disasterMap");
 
-    alert(
-        "📍 DISASTER MAP\n\n" +
-        "Live disaster map will open here."
-    );
-
+    if (mapElement) {
+        mapElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    } else {
+        alert("Map section not found.");
+    }
 }
 
+function viewResources() {
+    const resources = document.querySelector(".resources");
 
-function viewAlerts() {
+    if (resources) {
+        resources.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+}
+
+async function findAmbulance() {
+    try {
+        const response = await fetch(
+            "http://localhost:5000/api/ambulances"
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || result.success === false) {
+            throw new Error(
+                result.message || "Unable to load ambulances"
+            );
+        }
+
+        const ambulances = result.data || [];
+
+        if (ambulances.length === 0) {
+            alert("No ambulance records found.");
+            return;
+        }
+
+        alert(
+            "AMBULANCE DETAILS\n\n" +
+            ambulances.map((item, index) =>
+                (index + 1) + ". " +
+                (item.name || "Ambulance") +
+                "\nLocation: " + (item.location || "Unknown") +
+                "\nStatus: " + (item.status || "Unknown")
+            ).join("\n\n")
+        );
+
+    } catch (error) {
+        alert("Ambulance loading failed: " + error.message);
+    }
+}
 
     alert(
         "🔔 LATEST EMERGENCY ALERTS\n\n" +
@@ -1753,8 +1723,66 @@ function viewAlerts() {
         "Heavy Rainfall"
     );
 
-}
 
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    loadSOSRequests();
+    const mapElement = document.getElementById("disasterMap");
+    const status = document.getElementById("mapStatus");
+
+    if (!mapElement || typeof L === "undefined") {
+        if (status) status.textContent = "Map library is not ready.";
+        return;
+    }
+
+    const map = L.map("disasterMap").setView([11.0168, 76.9558], 8);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    fetch("http://localhost:5000/api/live-dashboard")
+        .then(response => {
+            if (!response.ok) throw new Error("Backend error");
+            return response.json();
+        })
+        .then(result => {
+            const data = result.data || result;
+            let count = 0;
+
+            [...(data.victims || []), ...(data.teams || [])].forEach(item => {
+                const lat = Number(item.latitude);
+                const lng = Number(item.longitude);
+
+                if (
+                    item.latitude != null &&
+                    item.longitude != null &&
+                    Number.isFinite(lat) &&
+                    Number.isFinite(lng)
+                ) {
+                    L.marker([lat, lng])
+                        .addTo(map)
+                        .bindPopup(item.name || "Saved database location");
+                    count++;
+                }
+            });
+
+            if (status) {
+                status.textContent = count
+                    ? count + " saved locations loaded."
+                    : "Map loaded. No saved locations with coordinates.";
+            }
+        })
+        .catch(error => {
+            console.error("Map error:", error);
+            if (status) {
+                status.textContent = "Cannot load locations. Check backend.";
+            }
+        });
+
+    setTimeout(() => map.invalidateSize(), 300);
+});
 </script>
 
 </body>

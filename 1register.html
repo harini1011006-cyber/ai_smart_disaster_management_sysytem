@@ -484,6 +484,7 @@
 
                     <input
                         type="text"
+                        name="name"
                         placeholder="Enter your full name"
                         required
                     >
@@ -499,6 +500,7 @@
 
                     <input
                         type="number"
+                        name="age"
                         placeholder="Enter your age"
                         min="1"
                         max="120"
@@ -521,7 +523,7 @@
                         Gender
                     </label>
 
-                    <select required>
+                    <select name="gender" required>
 
                         <option value="">
                             Select Gender
@@ -596,6 +598,7 @@
 
                     <input
                         type="email"
+                        name="email"
                         placeholder="Enter email address"
                         required
                     >
@@ -611,6 +614,7 @@
 
                     <input
                         type="tel"
+                        name="phone"
                         placeholder="Enter phone number"
                         required
                     >
@@ -630,6 +634,7 @@
                 </label>
 
                 <textarea
+                    name="address"
                     placeholder="Enter your complete address"
                 ></textarea>
 
@@ -647,6 +652,7 @@
 
                 <input
                     type="text"
+                    name="location"
                     placeholder="Enter your city or location"
                     required
                 >
@@ -712,7 +718,7 @@
                     User Type
                 </label>
 
-                <select required>
+                <select name="userType" required>
 
                     <option value="">
                         Select User Type
@@ -752,6 +758,7 @@
 
                     <input
                         type="password"
+                        name="password"
                         placeholder="Create password"
                         required
                     >
@@ -767,6 +774,7 @@
 
                     <input
                         type="password"
+                        name="confirmPassword"
                         placeholder="Confirm password"
                         required
                     >
@@ -835,51 +843,54 @@
     </div>
 
 </div>
-
-
-
 <script>
-
-document
-.getElementById("registerForm")
-.addEventListener("submit", function(event) {
-
-    event.preventDefault();
-
-    alert("Registration successful!");
-
-});
-
-</script>
-<script>
-document.querySelector("form").addEventListener("submit", async function(event) {
+document.getElementById("registerForm").addEventListener("submit", async function(event) {
     event.preventDefault();
 
     const form = event.target;
 
+    const password = form.querySelector('[name="password"]').value;
+    const confirmPassword = form.querySelector('[name="confirmPassword"]').value;
+
+    if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+    }
+
     const data = {
         name: form.querySelector('[name="name"]').value,
         age: form.querySelector('[name="age"]').value,
+        gender: form.querySelector('[name="gender"]').value,
         email: form.querySelector('[name="email"]').value,
-        address: form.querySelector('[name="address"]').value,
         phone: form.querySelector('[name="phone"]').value,
+        address: form.querySelector('[name="address"]').value,
         location: form.querySelector('[name="location"]').value,
         userType: form.querySelector('[name="userType"]').value,
-        password: form.querySelector('[name="password"]').value,
-        confirmPassword: form.querySelector('[name="confirmPassword"]').value
+        password: password
     };
 
-    const response = await fetch("http://localhost:5000/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    });
+    try {
+        const response = await fetch("http://localhost:5000/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
 
-    const result = await response.json();
+        const result = await response.json();
 
-    alert(result.message);
+        if (result.success) {
+            alert("Registration successful!");
+            form.reset();
+        } else {
+            alert(result.message);
+        }
+
+    } catch (error) {
+        console.error(error);
+        alert("Registration failed. Please check the backend server.");
+    }
 });
 </script>
 

@@ -702,55 +702,57 @@ function renderCards() {
 
 // ADD / UPDATE TEAM
 document.getElementById("teamForm")
-.addEventListener("submit", function(e) {
+.addEventListener("submit", async function(e) {
 
     e.preventDefault();
 
     const id = document.getElementById("teamId").value;
 
-    const team = {
-
-        id: id ? Number(id) : Date.now(),
-
-        teamName: document.getElementById("teamName").value.trim(),
-
-        leader: document.getElementById("leader").value.trim(),
-
-        phone: document.getElementById("phone").value,
-
-        memberCount: Number(document.getElementById("memberCount").value),
-
-        specialization: document.getElementById("specialization").value,
-
-        location: document.getElementById("location").value.trim(),
-
-        status: document.getElementById("status").value,
-
-        vehicle: document.getElementById("vehicle").value.trim()
-
-    };
-
+    // Editing is not connected to MongoDB yet
     if (id) {
-
-        teams = teams.map(t =>
-            t.id === Number(id) ? team : t
-        );
-
-        showMessage("Rescue team updated successfully!");
-
-    } else {
-
-        teams.push(team);
-
-        showMessage("New rescue team added successfully!");
-
+        showMessage("Please add a new team to test MongoDB saving.");
+        return;
     }
 
-    saveData();
+    const team = {
+        teamName: document.getElementById("teamName").value.trim(),
+        teamLeader: document.getElementById("leader").value.trim(),
+        contact: document.getElementById("phone").value.trim(),
+        members: Number(document.getElementById("memberCount").value),
+        specialization: document.getElementById("specialization").value,
+        location: document.getElementById("location").value.trim(),
+        status: document.getElementById("status").value,
+        vehicle: document.getElementById("vehicle").value.trim()
+    };
 
-    resetForm();
+    try {
+        const response = await fetch(
+            "http://localhost:5000/api/rescue-teams",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(team)
+            }
+        );
 
-    renderAll();
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message || result.error || "Save failed"
+            );
+        }
+
+        showMessage("Rescue team saved to MongoDB successfully!");
+
+        resetForm();
+
+    } catch (error) {
+        console.error("Rescue Team Save Error:", error);
+        showMessage("Save failed: " + error.message);
+    }
 
 });
 

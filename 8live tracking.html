@@ -655,13 +655,14 @@ let routeLine = null;
 // MAP INITIALIZATION
 
 const map = L.map("map").setView([11.0168,76.9558],12);
-
 L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
-        attribution: "&copy; OpenStreetMap"
+        attribution: "&copy; OpenStreetMap contributors",
+        maxZoom: 19
     }
 ).addTo(map);
+
 
 // CUSTOM ICONS
 
@@ -750,14 +751,13 @@ async function loadDashboard() {
 }
 
 // DISPLAY VICTIMS
-
 function displayVictims() {
 
     const table = document.getElementById("victimTable");
 
-    if(victims.length === 0) {
+    if (victims.length === 0) {
         table.innerHTML =
-        '<tr><td colspan="6">No victims registered</td></tr>';
+        '<tr><td colspan="7">No victims registered</td></tr>';
         return;
     }
 
@@ -765,26 +765,51 @@ function displayVictims() {
 
         let badge = "pending";
 
-        if(v.status === "Rescue Assigned") badge = "assigned";
-        if(v.status === "Rescued") badge = "rescued";
+        if (v.status === "Assigned") badge = "assigned";
+        if (v.status === "Rescued") badge = "rescued";
 
         return `
         <tr>
             <td>${v.id}</td>
+
             <td>${escapeHTML(v.name)}</td>
+
             <td>${escapeHTML(v.phone)}</td>
+
             <td>${v.latitude}, ${v.longitude}</td>
-            <td><span class="badge ${badge}">${escapeHTML(v.status)}</span></td>
+
+            <td>
+                <span class="badge ${badge}">
+                    ${escapeHTML(v.status)}
+                </span>
+            </td>
+
+            <td>
+                ${
+                    v.assignedTeamId
+                    ? escapeHTML(v.assignedTeamId)
+                    : "Not Assigned"
+                }
+            </td>
+
             <td>
                 <button class="secondary"
-                onclick="findRouteFor(${v.id})">
+                onclick='findRouteFor(${JSON.stringify(v.id)})'>
                 Find Route
                 </button>
 
-                <button class="green"
-                onclick="changeVictimStatus(${v.id})">
-                Update
-                </button>
+                ${
+                    v.status !== "Rescued"
+                    ?
+                    `<button class="green"
+                    onclick='markVictimRescued(${JSON.stringify(v.id)})'>
+                    MARK AS RESCUED
+                    </button>`
+                    :
+                    `<span class="badge rescued">
+                    Rescued
+                    </span>`
+                }
             </td>
         </tr>
         `;
@@ -792,6 +817,30 @@ function displayVictims() {
     }).join("");
 
 }
+  // MARK VICTIM AS RESCUED
+
+async function markVictimRescued(id) {
+    if (!confirm("Confirm that this victim has been rescued?")) {
+        return;
+    }
+
+    try {
+        const response = await apiRequest(
+            `/victims/${encodeURIComponent(id)}/rescue`,
+            { method: "PUT" }
+        );
+
+        showMessage(
+            response.message || "Victim marked as rescued",
+            true
+        );
+
+        await loadDashboard();
+
+    } catch (error) {
+        showMessage("Rescue update failed: " + error.message, false);
+    }
+}                 
 
 // DISPLAY TEAMS
 
@@ -899,16 +948,25 @@ function updateDropdowns() {
     victimSelect.innerHTML =
         '<option value="">Select Victim</option>';
 
-    victims.forEach(v => {
+    const activeVictims = victims.filter(v =>
+        String(v.status || "").toLowerCase() !== "rescued"
+    );
 
-        if(v.status !== "Rescued") {
+    if (activeVictims.length === 0) {
+        victimSelect.innerHTML +=
+            '<option value="" disabled>No active victims available</option>';
+    }
 
-            victimSelect.innerHTML += `
-            <option value="${v.id}">
-                ${escapeHTML(v.name)}
-            </option>
-            `;
+    activeVictims.forEach(v => {
 
+        const id = v.id ?? v._id;
+        const name = v.name ?? v.victimName ?? v.fullName;
+
+        if (id != null && name) {
+            const option = document.createElement("option");
+            option.value = String(id);
+            option.textContent = name;
+            victimSelect.appendChild(option);
         }
 
     });
@@ -920,15 +978,20 @@ function updateDropdowns() {
 
     teams.forEach(t => {
 
-        teamSelect.innerHTML += `
-        <option value="${t.id}">
-            ${escapeHTML(t.name)}
-        </option>
-        `;
+        const id = t.id ?? t._id;
+        const name = t.name ?? t.teamName;
+
+        if (id != null && name) {
+            const option = document.createElement("option");
+            option.value = String(id);
+            option.textContent = name;
+            teamSelect.appendChild(option);
+        }
 
     });
 
 }
+
 
 // GET CURRENT LOCATION
 
@@ -1125,89 +1188,84 @@ async function changeVictimStatus(id) {
 
 }
 
-// FIND NEAREST TEAM
+//  ${victim.latitude}, ${victim.longitude}<br>
+
+
+ // FIND NEAREST TEAM
 
 async function findNearestTeam() {
-
     const id = document.getElementById("routeVictim").value;
 
-    if(!id) {
-        showMessage("Please select a victim",false);
+    if (!id) {
+        showMessage("Please select a victim", false);
         return;
     }
 
-    await findRouteFor(Number(id));
-
+    await findRouteFor(id);
 }
+
+
+// FIND ROUTE AND OPEN GOOGLE MAPS
 
 async function findRouteFor(id) {
-
     try {
+        const response = await apiRequest(
+            "/route/" + encodeURIComponent(String(id))
+        );
 
-        const data = await apiRequest("/route/" + id);
+        const routeData = response.data || response;
+        const victim = routeData.victim;
+        const team = routeData.team;
 
-        const victim = data.victim;
-        const team = data.nearestTeam;
-
-        const distance = data.distance;
-
-        document.getElementById("routeResult").innerHTML = `
-
-            <h3>🚑 Nearest Rescue Team Found</h3>
-
-            <b>Victim:</b> ${escapeHTML(victim.name)}<br>
-
-            <b>Rescue Team:</b> ${escapeHTML(team.name)}<br>
-
-            <b>Team Status:</b> ${escapeHTML(team.status)}<br>
-
-            <b>Distance:</b> ${distance} KM<br>
-
-            <b>Victim Location:</b>
-            ${victim.latitude}, ${victim.longitude}<br>
-
-            <b>Team Location:</b>
-            ${team.latitude}, ${team.longitude}<br>
-
-            <a target="_blank"
-            rel="noopener noreferrer"
-            href="https://www.google.com/maps/dir/${team.latitude},${team.longitude}/${victim.latitude},${victim.longitude}"
-            style="color:#a00000;font-weight:bold;">
-            🗺️ OPEN RESCUE ROUTE IN GOOGLE MAPS
-            </a>
-
-        `;
-
-        if(routeLine) {
-            map.removeLayer(routeLine);
+        if (!victim || !team) {
+            throw new Error(
+                "Victim or rescue team data is missing"
+            );
         }
 
-        routeLine = L.polyline(
-            [
-                [team.latitude,team.longitude],
-                [victim.latitude,victim.longitude]
-            ],
-            {
-                color:"#168a38",
-                weight:5,
-                dashArray:"10,8"
-            }
-        ).addTo(map);
+        const googleMapsUrl =
+            "https://www.google.com/maps/dir/?api=1" +
+            "&origin=" +
+            encodeURIComponent(
+                `${team.latitude},${team.longitude}`
+            ) +
+            "&destination=" +
+            encodeURIComponent(
+                `${victim.latitude},${victim.longitude}`
+            ) +
+            "&travelmode=driving";
 
-        map.fitBounds(routeLine.getBounds(),{
-            padding:[50,50]
-        });
+        document.getElementById("routeResult").innerHTML = `
+            <h3>🚑 Rescue Route</h3>
+            <p><b>Victim:</b> ${escapeHTML(victim.name)}</p>
+            <p><b>Rescue Team:</b> ${escapeHTML(team.name)}</p>
+            <p><b>Victim Location:</b>
+                ${victim.latitude}, ${victim.longitude}
+            </p>
+            <p><b>Team Location:</b>
+                ${team.latitude}, ${team.longitude}
+            </p>
+            <a href="${googleMapsUrl}"
+               target="_blank"
+               rel="noopener noreferrer"
+               style="display:inline-block;
+                      background:#b71c1c;
+                      color:white;
+                      padding:12px 18px;
+                      border-radius:6px;
+                      text-decoration:none;
+                      font-weight:bold;">
+                OPEN RESCUE ROUTE IN GOOGLE MAPS
+            </a>
+        `;
 
-        showMessage("Nearest rescue team identified!");
+        showMessage("Google Maps route link is ready!");
 
-    } catch(error) {
-
-        showMessage(error.message,false);
-
+    } catch (error) {
+        showMessage("Route error: " + error.message, false);
     }
-
 }
-
+ 
 // SELECT TEAM
 
 function selectTeam(id) {
@@ -1280,4 +1338,4 @@ setInterval(loadDashboard,10000);
 
 </body>
 </html>
-basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png
+https://tile.openstreetmap.org/{z}/{x}/{y}.png

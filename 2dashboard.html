@@ -577,20 +577,9 @@ body{
 
         <div class="stat orange">
 
-            <h4>🔔 Active Alerts</h4>
-
-            <strong>03</strong>
-
-            <p>2 new alerts</p>
-
-        </div>
-
-
-        <div class="stat blue">
-
             <h4>🆘 SOS Requests</h4>
 
-            <strong>07</strong>
+            <strong id="activeSOSCount">07</strong>
 
             <p>5 pending response</p>
 
@@ -601,7 +590,7 @@ body{
 
             <h4>👥 Rescue Teams</h4>
 
-            <strong>12</strong>
+            <strong id="rescueTeamCount">12</strong>
 
             <p>3 currently active</p>
 
@@ -954,25 +943,59 @@ body{
 <script>
 
 /* SOS BUTTON */
+async function sendSOS() {
 
-function sendSOS(){
+    const confirmSOS = confirm(
+        "🚨 EMERGENCY SOS\n\n" +
+        "Do you need immediate emergency assistance?"
+    );
 
-    const confirmSOS =
-        confirm(
-            "🚨 EMERGENCY SOS\n\n" +
-            "Do you need immediate emergency assistance?"
-        );
-
-    if(confirmSOS){
-
-        alert(
-            "✅ SOS REQUEST SENT!\n\n" +
-            "Your emergency request has been recorded.\n" +
-            "Rescue team will be notified."
-        );
-
+    if (!confirmSOS) {
+        return;
     }
 
+    try {
+
+        const response = await fetch("http://localhost:5000/api/sos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: "Dashboard User",
+                phone: "",
+                location: "",
+                latitude: null,
+                longitude: null,
+                emergencyType: "General Emergency",
+                description: "SOS sent from Dashboard"
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            alert(
+                "✅ SOS REQUEST SENT!\n\n" +
+                "Your emergency request has been recorded."
+            );
+
+        } else {
+
+            alert("❌ SOS failed: " + result.message);
+
+        }
+
+    } catch (error) {
+
+        console.error("SOS Error:", error);
+
+        alert(
+            "❌ SOS could not be sent.\n\n" +
+            "Please make sure the backend server is running."
+        );
+    }
 }
 
 
@@ -1009,7 +1032,27 @@ function openModule(moduleName){
     );
 
 }
+// LOAD DASHBOARD DATA FROM BACKEND
 
+async function loadDashboardData() {
+    try {
+        const response = await fetch("http://localhost:5000/api/dashboard");
+        const result = await response.json();
+
+        if (result.success) {
+            document.getElementById("activeSOSCount").textContent =
+                result.data.activeSOS;
+
+            document.getElementById("rescueTeamsCount").textContent =
+                result.data.rescueTeams;
+        }
+
+    } catch (error) {
+        console.error("Dashboard connection failed:", error);
+    }
+}
+
+loadDashboardData();
 </script>
 
 </body>
