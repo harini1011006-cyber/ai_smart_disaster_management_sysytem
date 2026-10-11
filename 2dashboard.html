@@ -955,13 +955,13 @@ async function sendSOS() {
     }
 
     try {
-
-        const response = await fetch("http://localhost:5000/api/sos", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
+const response = await fetch("https://ai-smart-disaster-management-sysytem.onrender.com/api/sos", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        
                 name: "Dashboard User",
                 phone: "",
                 location: "",
@@ -1042,9 +1042,8 @@ async function loadDashboardData() {
         if (result.success) {
             document.getElementById("activeSOSCount").textContent =
                 result.data.activeSOS;
-
-            document.getElementById("rescueTeamsCount").textContent =
-                result.data.rescueTeams;
+            document.getElementById("rescueTeamCount").textContent =
+    result.data.rescueTeams;
         }
 
     } catch (error) {
