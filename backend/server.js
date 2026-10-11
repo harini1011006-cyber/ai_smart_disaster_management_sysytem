@@ -480,9 +480,11 @@ app.get("/api/weather", async (req, res) => {
 
         const response = await fetch(url);
 
-        if (!response.ok) {
-            throw new Error("Weather service is unavailable");
-        }
+if (!response.ok) {
+    const details = await response.text();
+    console.error("Open-Meteo Error:", response.status, details);
+    throw new Error(`Weather API HTTP ${response.status}`);
+}
 
         const weather = await response.json();
 
@@ -679,9 +681,13 @@ app.get("/api/monitoring", async (req, res) => {
 
         const response = await fetch(url);
 
-        if (!response.ok) {
-            throw new Error("Weather service unavailable");
-        }
+        
+if (!response.ok) {
+    const details = await response.text();
+    console.error("Open-Meteo Error:", response.status, details);
+    throw new Error(`Weather API HTTP ${response.status}`);
+}
+
 
         const weather = await response.json();
         const current = weather.current;
