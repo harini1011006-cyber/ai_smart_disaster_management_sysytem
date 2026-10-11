@@ -667,73 +667,77 @@ app.post("/api/disaster/prediction", (req, res) => {
 // =====================================================
 
 // MODULE 4 - REAL-TIME DISASTER MONITORING
+// MODULE 4 - REAL-TIME DISASTER MONITORING
 app.get("/api/monitoring", async (req, res) => {
     try {
-        const url =
-            "https://api.open-meteo.com/v1/forecast" +
-            "?latitude=11.0168" +
-            "&longitude=76.9558" +
-            "&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m" +
-            "&timezone=Asia%2FKolkata";
+        // Reuse cached data for 60 seconds
+        const cached = app.locals.monitoringWeatherCache;
+
+        if (cached && Date.now() - cached.time < 60000) {
+            return res.json(cached.result);
+        }
+
+        // Alternative weather API: wttr.in
+        const url = "https://wttr.in/Coimbatore?format=j1";
 
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000);
+        const timeout = setTimeout(() => controller.abort(), 15000);
 
         let response;
 
         try {
             response = await fetch(url, {
-                signal: controller.signal
+                signal: controller.signal,
+                headers: { "User-Agent": "AISmartDisasterManagement/1.0" }
             });
         } finally {
             clearTimeout(timeout);
         }
 
         if (!response.ok) {
-            return res.status(502).json({
-                success: false,
-                message: "Weather data temporarily unavailable",
-                error: `Weather API HTTP ${response.status}`
-            });
+            throw new Error(`Weather API HTTP ${response.status}`);
         }
 
         const weather = await response.json();
-        const current = weather.current;
+        const current = weather.current_condition?.[0];
 
         if (!current) {
-            throw new Error("Weather data is missing");
+            throw new Error("Weather data unavailable");
         }
 
-        const temperature = Number(current.temperature_2m) || 0;
-
-        res.json({
+        const temperature = Number(current.temp_C);
+        const result = {
             success: true,
-            source: "Open-Meteo",
+            source: "wttr.in",
             data: {
                 location: "Coimbatore",
                 liveStatus: "Monitoring",
                 temperature,
-                humidity: Number(current.relative_humidity_2m) || 0,
-                rainfall: Number(current.precipitation) || 0,
-                windSpeed: Number(current.wind_speed_10m) || 0,
+                humidity: Number(current.humidity),
+                rainfall: Number(current.precipMM),
+                windSpeed: Number(current.windspeedKmph),
                 fireRisk: temperature >= 40 ? "High" : "Low",
                 lastUpdated: new Date().toISOString()
             }
-        });
+        };
+
+        app.locals.monitoringWeatherCache = {
+            time: Date.now(),
+            result
+        };
+
+        res.json(result);
 
     } catch (error) {
+        console.error("Monitoring Weather Error:", error.message);
+
         res.status(502).json({
             success: false,
-            message: "Unable to fetch monitoring weather data",
-            error: error.name === "AbortError"
-                ? "Weather API timed out"
-                : error.message
+            message: "Weather data temporarily unavailable",
+            error: error.message
         });
     }
 });
-
-
-
 // =====================================================
 // 5. EMERGENCY ALERT & NOTIFICATION
 // API: GET /api/alerts
