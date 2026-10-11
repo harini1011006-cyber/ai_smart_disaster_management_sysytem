@@ -215,7 +215,7 @@ label{font-weight:bold}
 <div class="box" style="padding:20px">
  <h3>System Settings</h3><br>
  <label>Backend API URL</label>
- <input id="apiUrl" value="http://localhost:5000/api/disaster-data">
+ 
  <button class="btn" onclick="saveSettings()">Save API URL</button>
  <button class="btn" onclick="loadData()">Test Connection</button>
  <br><br>
@@ -224,12 +224,11 @@ label{font-weight:bold}
  <button class="btn" onclick="location.reload()">Refresh Project</button>
 </div>
 </section>
-
 </main>
 </div>
 
 <script>
-let API_URL = "http://localhost:5000/api/monitoring";
+let API_URL = "https://ai-smart-disaster-management-sysytem.onrender.com/api/monitoring";
 let latestData = null;
 
 function showPage(id,element){
