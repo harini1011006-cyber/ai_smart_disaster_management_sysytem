@@ -674,8 +674,8 @@ app.get("/api/monitoring", async (req, res) => {
             `?latitude=${latitude}` +
             `&longitude=${longitude}` +
             `&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m` +
-            `&daily=precipitation_sum` +
             `&timezone=Asia%2FKolkata`;
+
 
         const response = await fetch(url);
 
