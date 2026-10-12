@@ -712,12 +712,12 @@ footer {
 }
 
 </style>
-<link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
+
 
 <!-- =========================
      SIDEBAR
@@ -1733,7 +1733,7 @@ document.addEventListener("DOMContentLoaded", function () {
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
-
+    setTimeout(() => map.invalidateSize(), 500);
     fetch("https://ai-smart-disaster-management-sysytem.onrender.com/api/live-dashboard")
         .then(response => {
             if (!response.ok) throw new Error("Backend error");
