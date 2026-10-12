@@ -188,6 +188,17 @@ const sosSchema = new mongoose.Schema({
 
 const SOS = mongoose.model("SOS", sosSchema);
 
+ // MODULE 6 - VICTIM SCHEMA
+const victimSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    location: { type: String, required: true },
+    contact: { type: String, required: true },
+    status: { type: String, default: "waiting" },
+    createdAt: { type: Date, default: Date.now }
+});
+
+const Victim = mongoose.model("Victim", victimSchema);
+
 // RELIEF RESOURCE SCHEMA
 const reliefResourceSchema = new mongoose.Schema({
     name: {
@@ -1657,6 +1668,62 @@ app.get("/api/reports", async (req, res) => {
         });
     }
 });
+
+// MODULE 6 - SAVE VICTIM
+app.post("/api/module6/victims", async (req, res) => {
+    try {
+        const { name, location, contact, status } = req.body;
+
+        if (!name || !location || !contact) {
+            return res.status(400).json({
+                success: false,
+                message: "Name, location and contact are required"
+            });
+        }
+
+        const victim = await Victim.create({
+            name: name,
+            location: location,
+            contact: contact,
+            status: status || "waiting"
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Victim saved successfully",
+            data: victim
+        });
+    } catch (error) {
+        console.error("Module 6 Save Victim Error:", error.message);
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// MODULE 6 - GET VICTIMS
+app.get("/api/module6/victims", async (req, res) => {
+    try {
+        const data = await Victim.find().sort({ createdAt: -1 });
+
+        res.json({
+            success: true,
+            count: data.length,
+            data: data
+        });
+    } catch (error) {
+        console.error("Module 6 Get Victims Error:", error.message);
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+
 app.use((req, res) => {
     res.status(404).json({
         success: false,

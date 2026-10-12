@@ -1287,25 +1287,23 @@ async function sendSOS() {
     if (!confirmed) return;
 
     try {
-
-        const response = await fetch(
-            "http://localhost:5000/api/sos",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: "SOS Victim",
-                    phone: "",
-                    location: "Unknown",
-                    emergencyType: "General Emergency",
-                    description: "SOS sent from SOS & Victim Management",
-                    status: "Pending"
-                })
-            }
-        );
-
+const response = await fetch(
+    "https://ai-smart-disaster-management-sysytem.onrender.com/api/sos",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: "SOS Victim",
+            phone: "",
+            location: "Unknown",
+            emergencyType: "General Emergency",
+            description: "SOS sent from SOS & Victim Management",
+            status: "Pending"
+        })
+    }
+);
         const result = await response.json();
 
         if (!response.ok || result.success === false) {
@@ -1363,7 +1361,7 @@ window.onclick = function(event) {
    ADD VICTIM
 ========================================================= */
 
-function addVictim() {
+async function addVictim() {
 
     const name =
         document.getElementById("victimName").value.trim();
@@ -1378,63 +1376,85 @@ function addVictim() {
         document.getElementById("victimStatus").value;
 
     if (!name || !location || !contact) {
-
         showToast("⚠️ Please fill all fields.");
-
         return;
     }
 
-    const table =
-        document.getElementById("victimTable");
+    try {
+        const response = await fetch(
+            "https://ai-smart-disaster-management-sysytem.onrender.com/api/module6/victims",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    location: location,
+                    contact: contact,
+                    status: status
+                })
+            }
+        );
 
-    const id =
-        "#V" +
-        String(table.rows.length + 1).padStart(3,"0");
+        const result = await response.json();
 
-    const row =
-        document.createElement("tr");
+        if (!response.ok || !result.success) {
+            showToast("❌ Save failed: " + result.message);
+            return;
+        }
 
-    row.dataset.status = status;
+        const table =
+            document.getElementById("victimTable");
 
-    row.innerHTML = `
-        <td>${id}</td>
+        const id =
+            "#V" +
+            String(table.rows.length + 1).padStart(3, "0");
 
-        <td>${name}</td>
+        const row = document.createElement("tr");
 
-        <td>${location}</td>
+        row.dataset.status = status;
 
-        <td>${contact}</td>
+        const values = [
+            id,
+            name,
+            location,
+            contact
+        ];
 
-        <td>
-            <span class="status ${status}">
-                ${capitalize(status)}
-            </span>
-        </td>
+        values.forEach(value => {
+            const td = document.createElement("td");
+            td.textContent = value;
+            row.appendChild(td);
+        });
 
-        <td>
-            <button
-                class="action-btn"
-                onclick="viewVictim('${name}')">
-                View
-            </button>
-        </td>
-    `;
+        const statusCell = document.createElement("td");
+        const badge = document.createElement("span");
+        badge.className = "status " + status;
+        badge.textContent = capitalize(status);
+        statusCell.appendChild(badge);
+        row.appendChild(statusCell);
 
-    table.appendChild(row);
+        const actionCell = document.createElement("td");
+        const viewButton = document.createElement("button");
+        viewButton.className = "action-btn";
+        viewButton.textContent = "View";
+        viewButton.onclick = () => viewVictim(name);
+        actionCell.appendChild(viewButton);
+        row.appendChild(actionCell);
 
-    const total =
-        document.getElementById("totalVictims");
+        table.appendChild(row);
 
-    total.textContent =
-        parseInt(total.textContent) + 1;
+        document.getElementById("victimName").value = "";
+        document.getElementById("victimLocation").value = "";
+        document.getElementById("victimContact").value = "";
 
-    closeVictimModal();
+        showToast("✓ Victim saved to MongoDB successfully.");
 
-    document.getElementById("victimName").value = "";
-    document.getElementById("victimLocation").value = "";
-    document.getElementById("victimContact").value = "";
-
-    showToast("✓ Victim added successfully.");
+    } catch (error) {
+        console.error("Save Victim Error:", error);
+        showToast("❌ Cannot connect to server. Try again.");
+    }
 }
 
 
