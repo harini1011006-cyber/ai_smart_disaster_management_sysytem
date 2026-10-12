@@ -983,6 +983,31 @@ app.post("/api/rescue-teams", async (req, res) => {
     }
 });
 
+app.delete("/api/rescue-teams/:id", async (req, res) => {
+    try {
+        const team = await LiveTeam.findByIdAndDelete(req.params.id);
+
+        if (!team) {
+            return res.status(404).json({
+                success: false,
+                message: "Rescue team not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Rescue team deleted successfully"
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to delete rescue team",
+            error: error.message
+        });
+    }
+});
+
+
     // =====================================================
 // 8. AI RESCUE ROUTE & LIVE TRACKING
 // =====================================================

@@ -805,21 +805,35 @@ function editTeam(id) {
 
 }
 
-// DELETE TEAM
-function deleteTeam(id) {
+ // DELETE TEAM
+async function deleteTeam(id) {
 
     if (!confirm("Are you sure you want to delete this rescue team?")) {
         return;
     }
 
-    teams = teams.filter(t => t.id !== id);
+    try {
+        const response = await fetch(
+            `https://ai-smart-disaster-management-sysytem.onrender.com/api/rescue-teams/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
 
-    saveData();
+        const result = await response.json();
 
-    renderAll();
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Delete failed");
+        }
 
-    showMessage("Rescue team deleted successfully!");
+        await loadRescueTeams();
 
+        showMessage("Rescue team deleted successfully!");
+
+    } catch (error) {
+        console.error("Delete Rescue Team Error:", error);
+        showMessage("Delete failed: " + error.message);
+    }
 }
 
 // RESET FORM
