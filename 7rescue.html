@@ -706,11 +706,15 @@ document.getElementById("teamForm")
 
     e.preventDefault();
 
+    const submitBtn = document.getElementById("submitBtn");
+
+    // Prevent duplicate submissions
+    if (submitBtn.disabled) return;
+
     const id = document.getElementById("teamId").value;
 
-    // Editing is not connected to MongoDB yet
     if (id) {
-        showMessage("Please add a new team to test MongoDB saving.");
+        showMessage("Team update is not connected yet.");
         return;
     }
 
@@ -725,9 +729,12 @@ document.getElementById("teamForm")
         vehicle: document.getElementById("vehicle").value.trim()
     };
 
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Saving...";
+
     try {
         const response = await fetch(
-"https://ai-smart-disaster-management-sysytem.onrender.com/api/rescue-teams",
+            "https://ai-smart-disaster-management-sysytem.onrender.com/api/rescue-teams",
             {
                 method: "POST",
                 headers: {
@@ -745,16 +752,23 @@ document.getElementById("teamForm")
             );
         }
 
-        showMessage("Rescue team saved to MongoDB successfully!");
-
         resetForm();
+
+        await loadRescueTeams();
+
+        showMessage("Rescue team saved successfully!");
 
     } catch (error) {
         console.error("Rescue Team Save Error:", error);
         showMessage("Save failed: " + error.message);
+
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Add Rescue Team";
     }
 
 });
+
 
 // EDIT TEAM
 function editTeam(id) {
@@ -851,8 +865,43 @@ function renderAll() {
 
 }
 
+
+ // LOAD RESCUE TEAMS FROM MONGODB
+async function loadRescueTeams() {
+    try {
+        const response = await fetch(
+            "https://ai-smart-disaster-management-sysytem.onrender.com/api/rescue-teams"
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error("Failed to load rescue teams");
+        }
+
+        teams = result.data.map((t, index) => ({
+            id: t._id,
+            teamName: t.name || t.teamName || "",
+            leader: t.teamLeader || "",
+            phone: t.contact || "",
+            memberCount: Number(t.members) || 0,
+            specialization: t.specialization || "",
+            location: t.location || "",
+            status: t.status || "Available",
+            vehicle: t.vehicle || ""
+        }));
+
+        renderAll();
+
+    } catch (error) {
+        console.error("Load Rescue Teams Error:", error);
+        showMessage("Could not load rescue teams from server.");
+    }
+}
+
 // INITIAL LOAD
-renderAll();
+loadRescueTeams();
+
 
 </script>
 
