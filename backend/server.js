@@ -64,9 +64,15 @@ const liveVictimSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 
+
 const liveTeamSchema = new mongoose.Schema({
     name: String,
+    teamLeader: String,
+    contact: String,
     members: Number,
+    specialization: String,
+    location: String,
+    vehicle: String,
     latitude: Number,
     longitude: Number,
     status: {
@@ -82,6 +88,7 @@ const liveTeamSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+
 
 const rescueAllocationSchema = new mongoose.Schema({
     victimId: {
@@ -926,32 +933,38 @@ app.get("/api/rescue-teams", async (req, res) => {
     }
 });
 
+
 app.post("/api/rescue-teams", async (req, res) => {
     try {
         const {
             teamName,
             teamLeader,
+            contact,
             members,
+            specialization,
             location,
             status,
-            contact,
-            specialization,
             vehicle
         } = req.body;
 
-        if (!teamName) {
+        if (!teamName || !teamLeader) {
             return res.status(400).json({
                 success: false,
-                message: "Team name is required"
+                message: "Team name and team leader are required"
             });
         }
 
         const team = await LiveTeam.create({
             name: teamName,
+            teamLeader,
+            contact,
             members: Number(members) || 0,
+            specialization,
+            location,
+            status: status || "Available",
+            vehicle,
             latitude: 0,
-            longitude: 0,
-            status: status || "Available"
+            longitude: 0
         });
 
         res.status(201).json({
@@ -959,7 +972,6 @@ app.post("/api/rescue-teams", async (req, res) => {
             message: "Rescue team saved to MongoDB successfully",
             data: team
         });
-
     } catch (error) {
         console.error("Rescue Team Save Error:", error.message);
 
@@ -970,7 +982,6 @@ app.post("/api/rescue-teams", async (req, res) => {
         });
     }
 });
-
 
     // =====================================================
 // 8. AI RESCUE ROUTE & LIVE TRACKING
@@ -1417,7 +1428,7 @@ app.put("/api/victims/:id/rescue", async (req, res) => {
         });
     }
 });
-``
+
 // =====================================================
 // 9. RELIEF & SHELTER MANAGEMENT
 // API: GET /api/shelters
@@ -1723,13 +1734,14 @@ app.get("/api/module6/victims", async (req, res) => {
     }
 });
 
-
+// 404 HANDLER
 app.use((req, res) => {
     res.status(404).json({
         success: false,
         message: "API endpoint not found"
     });
 });
+
 
 app.listen(PORT, () => {
     console.log("==========================================");
